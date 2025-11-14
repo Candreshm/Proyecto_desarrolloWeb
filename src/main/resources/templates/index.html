@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <!-- Reuse your global head (WebJars, JS, etc.) and add our custom CSS -->
+    <head th:replace="~{general/fragmentos :: head}">
+        <link rel="stylesheet" th:href="@{/css/farmalife.css}" />
+    </head>
+
+    <body>
+        <!-- Global navbar / language switcher -->
+        <header th:replace="~{general/fragmentos :: header}"></header>
+
+        <!-- HERO (with carousel background on larger screens) -->
+        <section class="container py-4">
+            <div class="hero-inner">
+                <div class="row align-items-center gy-4">
+                    <div class="col-12 col-lg-6">
+                        <h1 class="display-5 fw-bold text-farma mb-3">
+                            [[#{landing.hero.title}]]
+                        </h1>
+                        <p class="lead text-secondary mb-4">
+                            [[#{landing.hero.subtitle}]]
+                        </p>
+                        <a th:href="@{/producto/listado}" class="btn btn-primary px-4 py-2 mt-2">
+                            Ver productos
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURED CATEGORIES -->
+        <section class="container py-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="section-title m-0">[[#{landing.categorias.titulo}]]</h2>
+                <a class="link-farma" th:href="@{/categoria/listado}">[[#{landing.categorias.verTodas}]]</a>
+            </div>
+
+            <!-- If you already load categorias in the model -->
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3" th:if="${categorias != null}">
+                <div class="col" th:each="c: ${categorias}">
+                    <a class="card h-100 card-farma category-card text-center" th:href="@{/consultas/{id}(id=${c.idCategoria})}">
+                        <div class="d-flex justify-content-center align-items-center p-3" style="height:120px;">
+                            <img th:src="@{${c.rutaImagen}}" alt="[[${c.descripcion}]]" class="img-fluid" style="max-height:100%;object-fit:contain;">
+                        </div>
+                        <div class="card-body text-center">
+                            <h3 class="h6 m-0" th:text="${c.descripcion}">Categoria</h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Placeholder categories if none provided -->
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3" th:if="${categorias == null}">
+                <div class="col" th:each="cat : ${#lists.arrayList('Medicamentos','Vitaminas','Cuidado Personal','Bebés & Mamás')}">
+                    <div class="card h-100 card-hover">
+                        <div class="d-flex justify-content-center align-items-center p-3" style="height:120px;">
+                            <img th:src="@{/img/farmalife/cat-placeholder.png}" class="img-fluid" alt=""/>
+                        </div>
+                        <div class="card-body text-center">
+                            <h3 class="h6 m-0" th:text="${cat}"></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- POPULAR PRODUCTS (reuses your product model) -->
+        <section class="container py-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="section-title m-0">[[#{landing.populares.titulo}]]</h2>
+                <a class="link-farma" th:href="@{/producto/listado}">[[#{landing.populares.verTodos}]]</a>
+            </div>
+
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3">
+                <div class="col" th:each="p: ${productosPopulares}">
+                    <div class="card h-100 shadow-sm card-farma">
+                        <div class="d-flex justify-content-center align-items-center bg-light p-3" style="height: 180px;">
+                            <img th:src="${p.rutaImagen}" class="img-fluid" style="max-height:100%;object-fit:contain;" alt=""/>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="h6 text-truncate" th:text="${p.descripcion}">Producto</h3>
+                            <p class="small text-muted text-truncate" th:text="${p.detalle}">Detalle</p>
+                        </div>
+                        <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                            <span class="fw-bold text-farma" th:text="${#numbers.formatCurrency(p.precio)}">$0.00</span>
+                            <form th:action="@{/carrito/agregar}" method="post">
+                                <input type="hidden" name="idProducto" th:value="${p.idProducto}"/>
+                                <button class="btn btn-sm btn-farma" th:disabled="${p.existencias == 0}">
+                                    <i class="fa-solid fa-cart-plus"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Optional: show empty state -->
+                <div class="col" th:if="${#lists.isEmpty(productosPopulares)}">
+                    <div class="alert alert-info mb-0">[[#{landing.populares.vacio}]]</div>
+                </div>
+            </div>
+        </section>
+
+        <footer th:replace="~{general/fragmentos :: footer}"></footer>
+    </body>
+</html>

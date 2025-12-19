@@ -57,6 +57,7 @@
                         <div th:each="c : ${categorias}" class="col-md-6 col-lg-4 col-xl-3">
                             <div class="card h-100 border-0 shadow-sm category-management-card category-clickable-card" 
                                  th:data-category-id="${c.idCategoria}"
+                                 th:data-category-url="@{/consultas/{id}(id=${c.idCategoria})}"
                                  style="cursor: pointer;">
                                 <div class="card-img-top-container bg-light d-flex justify-content-center align-items-center p-4" 
                                      style="height: 200px;">
@@ -140,6 +141,7 @@
             
             <!-- JavaScript to handle category card clicks -->
             <script th:inline="javascript">
+                /*<![CDATA[*/
                 document.addEventListener('DOMContentLoaded', function() {
                     const categoryCards = document.querySelectorAll('.category-clickable-card');
                     
@@ -149,14 +151,15 @@
                             if (!event.target.closest('.category-action-buttons') && 
                                 !event.target.closest('a') && 
                                 !event.target.closest('button')) {
-                                const categoryId = card.getAttribute('data-category-id');
-                                if (categoryId) {
-                                    window.location.href = /*[[@{/consultas/}]]*/ '' + categoryId;
+                                const categoryUrl = card.getAttribute('data-category-url');
+                                if (categoryUrl) {
+                                    window.location.href = categoryUrl;
                                 }
                             }
                         });
                     });
                 });
+                /*]]>*/
             </script>
         </section>
 

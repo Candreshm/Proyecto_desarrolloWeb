@@ -21,11 +21,11 @@ public class VentaController {
         // Get all sales
         model.addAttribute("ventas", ventaService.getAllSales());
         
-        // Get top selling products for chart
+        // Get top selling products for chart - convert to simple structure
         List<Map<String, Object>> topProducts = ventaService.getTopSellingProducts();
         model.addAttribute("topProducts", topProducts);
         
-        // Get sales by day for chart
+        // Get sales by day for chart - convert to simple structure
         List<Map<String, Object>> salesByDay = ventaService.getSalesByDay();
         model.addAttribute("salesByDay", salesByDay);
         

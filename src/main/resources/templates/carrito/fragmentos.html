@@ -19,85 +19,130 @@
         </div>     
 
         <section th:fragment="listadoCarrito" id="items">          
-            <div class="row p-5">
-                <div class="col-md-9">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>[[#{carrito.titulo}]]</h4>
+            <div class="container py-4">
+                <div class="row">
+                    <!-- Cart Items - Main Content -->
+                    <div class="col-lg-8 mb-4">
+                        <div class="card shadow-sm cart-main-card">
+                            <div class="card-header cart-header text-white">
+                                <h4 class="mb-0">
+                                    <i class="fas fa-shopping-cart me-2"></i>[[#{carrito.titulo}]]
+                                </h4>
+                            </div>
+                            <div class="card-body p-4">
+                                <div th:if="${carritoItems != null and !carritoItems.empty}">
+                                    <div class="cart-items-list">
+                                        <div th:each="item : ${carritoItems}" class="cart-item-card mb-3">
+                                            <div class="row g-3 align-items-center">
+                                                <!-- Product Image -->
+                                                <div class="col-auto">
+                                                    <div class="cart-item-image">
+                                                        <img th:src="@{${item.producto.rutaImagen}}" 
+                                                             alt="Producto" 
+                                                             class="img-fluid rounded"
+                                                             style="width: 100px; height: 100px; object-fit: cover;"
+                                                             onerror="this.src='https://via.placeholder.com/100x100/e8f5e9/4caf50?text=No+Image'"/>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Product Details -->
+                                                <div class="col">
+                                                    <div class="d-flex justify-content-between align-items-start">
+                                                        <div class="flex-grow-1">
+                                                            <h5 class="mb-1 fw-bold text-dark" th:text="${item.producto.descripcion}">Producto</h5>
+                                                            <p class="text-muted small mb-2" th:text="${item.producto.detalle}">Detalle del producto</p>
+                                                            <div class="d-flex align-items-center gap-3">
+                                                                <span class="text-muted small">
+                                                                    <i class="fas fa-dollar-sign me-1"></i>
+                                                                    Precio: <strong th:text="${#numbers.formatCurrency(item.precioHistorico)}">₡0.00</strong>
+                                                                </span>
+                                                                <span class="text-muted small">
+                                                                    <i class="fas fa-hashtag me-1"></i>
+                                                                    Cantidad: <strong th:text="${item.cantidad}">0</strong>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <!-- Subtotal -->
+                                                        <div class="text-end ms-3">
+                                                            <div class="cart-item-subtotal">
+                                                                <span class="h5 text-success fw-bold" 
+                                                                      th:text="${#numbers.formatCurrency(item.precioHistorico * item.cantidad)}">
+                                                                    ₡0.00
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Action Buttons -->
+                                                    <div class="d-flex gap-2 mt-3">
+                                                        <a th:href="@{/carrito/modificar/}+${item.producto.idProducto}"
+                                                           class="btn btn-sm cart-btn-edit">
+                                                            <i class="fas fa-pencil-alt me-1"></i>[[#{accion.actualizar}]]
+                                                        </a>
+                                                        <form th:action="@{/carrito/eliminar/}+${item.producto.idProducto}" 
+                                                              method="post" 
+                                                              class="d-inline"
+                                                              onsubmit="setTimeout(function(){ actualizarBadgeCarrito(); }, 1000);">
+                                                            <button type="submit" class="btn btn-sm cart-btn-delete">
+                                                                <i class="fas fa-trash me-1"></i>[[#{accion.eliminar}]]
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Empty Cart -->
+                                <div class="text-center py-5" th:if="${carritoItems == null or carritoItems.empty}">
+                                    <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
+                                    <h5 class="text-muted">[[#{carrito.no_mostrar}]]</h5>
+                                    <a th:href="@{/}" class="btn cart-btn-primary mt-3">
+                                        <i class="fas fa-shopping-bag me-2"></i>Continuar Comprando
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                        <div th:if="${carritoItems != null and !carritoItems.empty}">
-                            <table class="table table-stryped">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>[[#{producto.descripcion}]]</th>
-                                        <th>[[#{producto.precio}]]</th>
-                                        <th>[[#{carrito.cantidad}]]</th>
-                                        <th>[[#{carrito.total}]]</th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr th:each="item : ${carritoItems}">
-                                        <td>[[${item.producto.idProducto}]]</td>
-                                        <td>[[${item.producto.descripcion}]]</td>
-
-                                        <td class="text-end">[[${#numbers.formatCurrency(item.precioHistorico)}]]</td>
-                                        <td class="text-center">[[${item.cantidad}]]</td>
-                                        <td class="text-center">[[${#numbers.formatCurrency(item.precioHistorico*item.cantidad)}]]</td>
-                                        <td>
-                                            <form th:action="@{/carrito/eliminar/}+${item.producto.idProducto}" 
-                                                  method="post" 
-                                                  class="d-inline"
-                                                  onsubmit="setTimeout(function(){ actualizarBadgeCarrito(); }, 1000);">
-                                                <button type="submit" class="btn btn-danger">
-                                                    <i class='fas fa-trash'></i> [[#{accion.eliminar}]]
-                                                </button>
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <a th:href="@{/carrito/modificar/}+${item.producto.idProducto}"
-                                               class="btn btn-warning">
-                                                <i class='fas fa-pencil'></i> [[#{accion.actualizar}]]
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="text-center p-2" th:if="${carritoItems== null or carritoItems.empty}">
-                            [[#{carrito.no_mostrar}]]
+                    </div>
+                    
+                    <!-- Cart Summary Sidebar -->
+                    <div class="col-lg-4">
+                        <div class="sticky-top" style="top: 20px;">
+                            <!-- Total Card -->
+                            <div class="card shadow-sm cart-summary-card mb-3">
+                                <div class="card-header cart-summary-header text-white text-center">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-receipt me-2"></i>[[#{carrito.totalCompra}]]
+                                    </h5>
+                                </div>
+                                <div class="card-body text-center p-4">
+                                    <div class="cart-total-amount">
+                                        <span class="h2 text-success fw-bold" 
+                                              th:text="${#numbers.formatCurrency(totalCarrito)}">
+                                            ₡0.00
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="d-grid gap-2">
+                                <a th:href="@{/}"
+                                   class="btn cart-btn-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>[[#{carrito.seguirComprando}]]
+                                </a>
+                                <a th:href="@{/facturar/carrito}"
+                                   class="btn cart-btn-primary"
+                                   th:if="${carritoItems != null and !carritoItems.empty}">
+                                    <i class="fas fa-credit-card me-2"></i>[[#{carrito.facturar}]]
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card text-center bg-primary text-white mb-3">
-                        <div class="card-body">
-                            <h3>[[#{carrito.totalCompra}]]</h3>
-                            <h4 class="fs-4">
-                                [[${#numbers.formatCurrency(totalCarrito)}]]
-                            </h4>
-                        </div>
-                    </div>
-                    <div class="card text-center bg-success text-white mb-3">
-                        <div class="card-body">
-                            <a th:href="@{/}"
-                               class="btn btn-success">
-                                <i class='fas fa-reply'></i> [[#{carrito.seguirComprando}]]
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card text-center bg-info text-white mb-3">
-                        <div class="card-body">
-                            <a th:href="@{/facturar/carrito}"
-                               class="btn btn-info">
-                                <i class='fas fa-fordward'></i> [[#{carrito.facturar}]]
-                            </a>
-                        </div>
-                    </div> 
-                </div>
-            </div>            
+            </div>
         </section>
 
         <section th:fragment="modificaItem" class="container py-4">

@@ -7,7 +7,9 @@
         <header th:replace="~{general/fragmentos :: header}"/>
 
         <main class="flex-grow-1 d-flex align-items-center justify-content-center py-5">
-            <section th:replace="~{registro/fragmentos :: recordarUsuario}"/>
+            <div class="container">
+                <section th:replace="~{registro/fragmentos :: recordarUsuario}"/>
+            </div>
         </main>
 
         <footer th:replace="~{general/fragmentos :: footer}"/>

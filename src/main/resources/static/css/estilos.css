@@ -57,6 +57,14 @@
     color: #2e7d32;
     position: relative;
     z-index: 1;
+    line-height: 1.2;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+/* Ensure "Tu salud," stays on first line and "nuestra prioridad" on second */
+.hero-title br {
+    display: block;
 }
 
 .hero-subtitle {

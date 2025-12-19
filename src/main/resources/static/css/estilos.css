@@ -2,8 +2,15 @@
 
 /* Hero Section */
 .hero-section {
-    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 50%, #a5d6a7 100%);
+    /* Remove background from here - it will be on hero-background */
     min-height: 400px;
+    display: flex;
+    align-items: center;
+}
+
+.hero-background {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 50%, #a5d6a7 100%);
+    min-height: 300px;
     display: flex;
     align-items: center;
 }

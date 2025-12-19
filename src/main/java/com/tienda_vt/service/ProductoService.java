@@ -44,6 +44,23 @@ public class ProductoService {
         return productoRepository.findByCategoriaIdCategoria(idCategoria);
     }
     
+    // Add search methods
+    @Transactional(readOnly=true)
+    public List<Producto> buscarProductos(String buscar) {
+        if (buscar == null || buscar.trim().isEmpty()) {
+            return getProductos(false);
+        }
+        return productoRepository.buscarProductos(buscar.trim());
+    }
+    
+    @Transactional(readOnly=true)
+    public List<Producto> buscarProductosPorPrecio(String buscar, BigDecimal precioInf, BigDecimal precioSup) {
+        if (buscar == null || buscar.trim().isEmpty()) {
+            return productoRepository.findByPrecioBetweenOrderByPrecioAsc(precioInf, precioSup);
+        }
+        return productoRepository.buscarProductosPorPrecio(buscar.trim(), precioInf, precioSup);
+    }
+    
     @Transactional(readOnly=true)
     public Optional<Producto> getProducto(Integer idProducto) {
         return productoRepository.findById(idProducto);

@@ -57,11 +57,48 @@
             </div>
         </section>
 
-        <section th:fragment="consultas" class="row row-cols-4 p-2">
-            <div th:replace="~{consultas/fragmentos :: formConsulta('primary',#{pruebas.ampliadas},'/consultas/consultaDerivada')}"/>
-            <div th:replace="~{consultas/fragmentos :: formConsulta('warning',#{pruebas.jpql},'/consultas/consultaJPQL')}"/>
-            <div th:replace="~{consultas/fragmentos :: formConsulta('success',#{pruebas.nativo},'/consultas/consultaSQL')}"/>
-            <div class="card"><p>Acá a su tarea #2</p></div>
+        <section th:fragment="consultas" class="row p-2">
+            <div class="col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h5>[[#{pruebas.filtrar.precio}]]</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="get" th:action="@{/consultas/listado}" class="was-validated">
+                            <!-- Preserve search term if exists -->
+                            <input type="hidden" name="buscar" th:value="${buscar}">
+                            
+                            <div class="row">
+                                <div class="col-md-5 mb-3">
+                                    <label>[[#{pruebas.precio.inferior}]]</label>
+                                    <input type="number" 
+                                           name="precioInf" 
+                                           th:value="${precioInf}" 
+                                           class="form-control" 
+                                           min="0" 
+                                           step="0.01"
+                                           required/>
+                                </div>
+                                <div class="col-md-5 mb-3">
+                                    <label>[[#{pruebas.precio.superior}]]</label>
+                                    <input type="number" 
+                                           name="precioSup" 
+                                           th:value="${precioSup}" 
+                                           class="form-control" 
+                                           min="0" 
+                                           step="0.01"
+                                           required/>
+                                </div>
+                                <div class="col-md-2 mb-3 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fa-solid fa-magnifying-glass"></i> [[#{pruebas.filtrar}]]
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <div th:fragment="formConsulta(colorForm, textoForm, urlForm)">

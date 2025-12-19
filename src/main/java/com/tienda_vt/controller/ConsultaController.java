@@ -25,40 +25,49 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ConsultaController {
 
     private final ProductoService productoService;
+    private final CategoriaService categoriaService;
 
-    public ConsultaController(ProductoService productoService) {
+    public ConsultaController(ProductoService productoService, CategoriaService categoriaService) {
         this.productoService = productoService;
+        this.categoriaService = categoriaService;
     }
 
     @GetMapping("/listado")
-    public String listado(Model model) {
+    public String listado(@RequestParam(required = false) String buscar,
+                          @RequestParam(required = false) BigDecimal precioInf,
+                          @RequestParam(required = false) BigDecimal precioSup,
+                          Model model) {
         var productos = productoService.getProductos(false);
+        
+        // Apply search filter if provided
+        if (buscar != null && !buscar.trim().isEmpty()) {
+            productos = productoService.buscarProductos(buscar);
+        }
+        
+        // Apply price filter if provided
+        if (precioInf != null && precioSup != null) {
+            if (buscar != null && !buscar.trim().isEmpty()) {
+                // Both search and price filter
+                productos = productoService.buscarProductosPorPrecio(buscar, precioInf, precioSup);
+            } else {
+                // Only price filter
+                productos = productoService.consultaDerivada(precioInf, precioSup);
+            }
+        }
+        
         model.addAttribute("productos", productos);
+        model.addAttribute("buscar", buscar);
+        model.addAttribute("precioInf", precioInf);
+        model.addAttribute("precioSup", precioSup);
+        
+        // Add categories for tabs
+        var categorias = categoriaService.getCategorias(true);
+        model.addAttribute("categorias", categorias);
+        
         return "/consultas/listado";
     }
     
-    @PostMapping("/consultaDerivada")
-    public String consultaDerivada(@RequestParam() BigDecimal precioInf, @RequestParam() BigDecimal precioSup, Model model) {
-        var productos = productoService.consultaDerivada(precioInf, precioSup);
-        model.addAttribute("productos", productos);
-        System.out.println(precioInf + " - " + precioSup);
-        return "/consultas/listado";
-    }
-    
-    @PostMapping("/consultaJPQL")
-    public String consultaJPQL(@RequestParam() BigDecimal precioInf, @RequestParam() BigDecimal precioSup, Model model) {
-        var productos = productoService.consultaJPQL(precioInf, precioSup);
-        model.addAttribute("productos", productos);
-        System.out.println(precioInf + " - " + precioSup);
-        return "/consultas/listado";
-    }
-    
-    @PostMapping("/consultaSQL")
-    public String consultaSQL(@RequestParam() BigDecimal precioInf, @RequestParam() BigDecimal precioSup, Model model) {
-        var productos = productoService.consultaSQL(precioInf, precioSup);
-        model.addAttribute("productos", productos);
-        System.out.println(precioInf + " - " + precioSup);
-        return "/consultas/listado";
-    }
+    // Remove the old consultaDerivada, consultaJPQL, consultaSQL methods
+    // They are replaced by the combined search in listado method above
 
 }

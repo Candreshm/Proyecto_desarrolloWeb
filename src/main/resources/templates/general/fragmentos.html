@@ -29,8 +29,16 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarCollapse">
                         <!-- Search Bar -->
-                        <form class="d-flex mx-auto my-2 my-lg-0" style="max-width: 500px; width: 100%;" th:action="@{/consultas/listado}" method="get">
-                            <input class="form-control me-2" type="search" name="buscar" placeholder="Buscar productos o medicamentos" aria-label="Buscar">
+                        <form class="d-flex mx-auto my-2 my-lg-0" 
+                              style="max-width: 500px; width: 100%;" 
+                              th:action="@{/consultas/listado}" 
+                              method="get">
+                            <input class="form-control me-2" 
+                                   type="search" 
+                                   name="buscar" 
+                                   placeholder="Buscar productos o medicamentos" 
+                                   aria-label="Buscar"
+                                   th:value="${buscar}">
                             <button class="btn btn-outline-success" type="submit">
                                 <i class="fas fa-search"></i>
                             </button>

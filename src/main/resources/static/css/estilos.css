@@ -226,3 +226,19 @@
         display: none !important;
     }
 }
+
+.hero-image {
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+    animation: floatImage 3s ease-in-out infinite;
+}
+
+@keyframes floatImage {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}

@@ -291,64 +291,98 @@
         </section>
 
         <section th:fragment="detalleFactura" class="container py-5">
-            <div class="card shadow-lg mx-auto" style="max-width: 900px;">
-                <div class="card-header bg-success text-white">
-                    <h3 class="mb-0">[[#{factura.confirmacion}]]</h3>
-                    <p th:if="${mensaje}" th:text="${mensaje}" class="mb-0"></p>
+            <div class="card shadow-lg mx-auto invoice-card" style="max-width: 900px;">
+                <!-- Invoice Header with Logo (visible in print) -->
+                <div class="invoice-header d-print-block d-none">
+                    <div class="d-flex align-items-center justify-content-center mb-4 pb-3 border-bottom">
+                        <i class="fas fa-plus-circle text-success fs-1 me-3"></i>
+                        <div class="text-center">
+                            <h2 class="mb-0 fw-bold text-success">FarmaLife</h2>
+                            <p class="text-muted small mb-0">Tu salud, nuestra prioridad</p>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="card-body">
+                <div class="card-header invoice-card-header">
+                    <h3 class="mb-0">
+                        <i class="fas fa-receipt me-2"></i>[[#{factura.confirmacion}]]
+                    </h3>
+                    <p th:if="${mensaje}" th:text="${mensaje}" class="mb-0 mt-2"></p>
+                </div>
+
+                <div class="card-body p-4">
                     <div class="row mb-4 border-bottom pb-3">
                         <div class="col-md-6">
-                            <h5>[[#{factura.detalles}]]</h5>
-                            <p><strong>[[#{factura.numero}]]:</strong> <span th:text="${factura.idFactura}">1001</span></p>
-                            <p><strong>[[#{factura.fecha}]]:</strong> <span th:text="${#temporals.format(factura.fecha, 'dd-MM-yyyy hh:mm')}">2024-10-25</span></p>
-                            <p><strong>[[#{factura.estado}]]:</strong> <span th:text="${factura.estado.valorBD}">Pagada</span></p>
+                            <h5 class="text-success mb-3">
+                                <i class="fas fa-info-circle me-2"></i>[[#{factura.detalles}]]
+                            </h5>
+                            <p class="mb-2">
+                                <strong class="text-dark">[[#{factura.numero}]]:</strong> 
+                                <span class="text-muted" th:text="${factura.idFactura}">1001</span>
+                            </p>
+                            <p class="mb-2">
+                                <strong class="text-dark">[[#{factura.fecha}]]:</strong> 
+                                <span class="text-muted" th:text="${#temporals.format(factura.fecha, 'dd-MM-yyyy hh:mm')}">2024-10-25</span>
+                            </p>
+                            <p class="mb-2">
+                                <strong class="text-dark">[[#{factura.estado}]]:</strong> 
+                                <span class="badge bg-success" th:text="${factura.estado.valorBD}">Pagada</span>
+                            </p>
                         </div>
-                        <div class="col-md-6 text-md-right">
-                            <h5>[[#{factura.cliente}]]</h5>
-                            <p><strong>[[#{usuario.nombre}]]:</strong> <span th:text="${factura.usuario.nombre} + ' ' + ${factura.usuario.apellidos}">Juan Perez</span></p>
-                            <p><strong>[[#{usuario.correo}]]:</strong> <span th:text="${factura.usuario.correo}">correo@ejemplo.com</span></p>
+                        <div class="col-md-6 text-md-end">
+                            <h5 class="text-success mb-3">
+                                <i class="fas fa-user me-2"></i>[[#{factura.cliente}]]
+                            </h5>
+                            <p class="mb-2">
+                                <strong class="text-dark">[[#{usuario.nombre}]]:</strong> 
+                                <span class="text-muted" th:text="${factura.usuario.nombre + ' ' + factura.usuario.apellidos}">Juan Perez</span>
+                            </p>
+                            <p class="mb-2">
+                                <strong class="text-dark">[[#{usuario.correo}]]:</strong> 
+                                <span class="text-muted" th:text="${factura.usuario.correo}">correo@ejemplo.com</span>
+                            </p>
                         </div>
                     </div>
 
-                    <h5>[[#{factura.productos.adquiridos}]]</h5>
+                    <h5 class="text-success mb-3">
+                        <i class="fas fa-shopping-bag me-2"></i>[[#{factura.productos.adquiridos}]]
+                    </h5>
                     <div class="table-responsive mb-4">
-                        <table class="table table-bordered table-striped">
-                            <thead class="thead-light">
+                        <table class="table table-bordered invoice-table">
+                            <thead class="invoice-table-header">
                                 <tr>
                                     <th>[[#{producto.descripcion}]]</th>
                                     <th class="text-center">[[#{carrito.cantidad}]]</th>
-                                    <th class="text-right">[[#{producto.precio}]]</th>
-                                    <th class="text-right">[[#{carrito.total}]]</th>
+                                    <th class="text-end">[[#{producto.precio}]]</th>
+                                    <th class="text-end">[[#{carrito.total}]]</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr th:each="venta, iterStat : ${factura.ventas}">
                                     <td th:text="${venta.producto.descripcion}">Laptop Xtreme</td>
                                     <td class="text-center" th:text="${venta.cantidad}">1</td>
-                                    <td class="text-end" th:text="${#numbers.formatCurrency(venta.precioHistorico)}">$520.00</td>
+                                    <td class="text-end" th:text="${#numbers.formatCurrency(venta.precioHistorico)}">₡520.00</td>
                                     <td class="text-end" th:with="subtotal=${venta.precioHistorico} * ${venta.cantidad}"
-                                        th:text="${#numbers.formatCurrency(subtotal)}">$520.00</td>
+                                        th:text="${#numbers.formatCurrency(subtotal)}">₡520.00</td>
                                 </tr>
                             </tbody>
-                            <tfoot>
+                            <tfoot class="invoice-table-footer">
                                 <tr>
                                     <td colspan="3" class="text-end"><strong>[[#{carrito.totalCompra}]]:</strong></td>
-                                    <td class="text-end text-success">
-                                        <strong class="h5" th:text="${#numbers.formatCurrency(factura.total)}">$1,040.00</strong>
+                                    <td class="text-end">
+                                        <strong class="h5 text-success" th:text="${#numbers.formatCurrency(factura.total)}">₡1,040.00</strong>
                                     </td>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
 
-                    <div class="text-center">
-                        <a th:href="@{/}" class="btn btn-primary btn-lg d-print-none">
-                            <i class='fas fa-home'></i> [[#{accion.regresar}]]
+                    <div class="text-center d-print-none">
+                        <a th:href="@{/}" class="btn invoice-btn-secondary btn-lg me-2">
+                            <i class='fas fa-home me-2'></i>[[#{accion.regresar}]]
                         </a>
-                        <button onclick="window.print()" class="btn btn-primary btn-lg d-print-none">
-                            <i class='fas fa-print'></i> [[#{accion.imprimir}]]
+                        <button onclick="window.print()" class="btn invoice-btn-primary btn-lg">
+                            <i class='fas fa-print me-2'></i>[[#{accion.imprimir}]]
                         </button>
                     </div>
 

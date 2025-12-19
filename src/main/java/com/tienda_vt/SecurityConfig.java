@@ -39,6 +39,9 @@ public class SecurityConfig {
                 // Require authentication for viewing and managing cart
                 requests.requestMatchers("/carrito/listado", "/carrito/**").authenticated();
                 
+                // Sales overview - admin only
+                requests.requestMatchers("/venta/listado", "/venta/**").hasRole("ADMIN");
+                
                 // Process dynamic routes from database
                 for (Ruta ruta : rutas){
                     if(ruta.isRequiereRol()){

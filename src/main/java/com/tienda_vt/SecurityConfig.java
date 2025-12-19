@@ -27,6 +27,12 @@ public class SecurityConfig {
         var rutas = rutaService.getRutas();
         
         http.authorizeHttpRequests(requests -> {
+                // Allow public access to products and categories views
+                requests.requestMatchers("/producto/listado", "/producto/listado/**").permitAll();
+                requests.requestMatchers("/categoria/listado", "/categoria/listado/**").permitAll();
+                requests.requestMatchers("/consultas/listado", "/consultas/**").permitAll();
+                
+                // Process dynamic routes from database
                 for (Ruta ruta : rutas){
                     if(ruta.isRequiereRol()){
                         requests.requestMatchers(ruta.getRuta()).hasRole(ruta.getRol().getRol());
@@ -34,6 +40,8 @@ public class SecurityConfig {
                         requests.requestMatchers(ruta.getRuta()).permitAll();
                     }
                 }
+                // Require authentication for cart operations
+                requests.requestMatchers("/carrito/**").authenticated();
                 requests.anyRequest().authenticated();
         });
 

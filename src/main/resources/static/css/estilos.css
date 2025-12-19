@@ -198,6 +198,30 @@
     background-color: #f8f9fa;
 }
 
+/* Section Backgrounds - matching hero style */
+.section-background {
+    background-color: #f8f9fa;
+    border-radius: 1rem;
+}
+
+/* Category Section */
+.category-section {
+    background-color: transparent; /* Remove gray background */
+}
+
+.category-section .section-background {
+    background-color: #f8f9fa;
+}
+
+/* Products Section */
+.products-section {
+    background-color: transparent; /* Remove gray background */
+}
+
+.products-section .section-background {
+    background-color: #f8f9fa;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     .hero-section {

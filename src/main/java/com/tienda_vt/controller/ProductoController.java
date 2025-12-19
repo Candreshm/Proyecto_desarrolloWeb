@@ -21,6 +21,7 @@ import java.util.Optional;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
+import java.util.List;
 /**
  *
  * @author lrq2a
@@ -36,13 +37,27 @@ public class ProductoController {
     private CategoriaService categoriaService;
     
     @GetMapping("/listado")
-    public String listado (Model model) {
-        var productos = productoService.getProductos(false);
+    public String listado (@RequestParam(required = false) Integer categoria, Model model) {
+        List<Producto> productos;
+        
+        if (categoria != null) {
+            // Filter by category (show all products in category, not just active ones for admin view)
+            productos = productoService.getProductosByCategoria(categoria, false);
+        } else {
+            // Show all products
+            productos = productoService.getProductos(false);
+        }
+        
         model.addAttribute("productos", productos);
         model.addAttribute("totalProductos", productos.size());
         
         var categorias = categoriaService.getCategorias(true);
         model.addAttribute("categorias", categorias);
+        
+        // Add selected category to model for highlighting in the view
+        if (categoria != null) {
+            model.addAttribute("categoriaSeleccionada", categoria);
+        }
         
         return "/producto/listado";
     

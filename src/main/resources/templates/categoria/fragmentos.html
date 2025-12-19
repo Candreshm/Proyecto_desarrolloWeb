@@ -151,9 +151,10 @@
                             if (!event.target.closest('.category-action-buttons') && 
                                 !event.target.closest('a') && 
                                 !event.target.closest('button')) {
-                                const categoryUrl = card.getAttribute('data-category-url');
-                                if (categoryUrl) {
-                                    window.location.href = categoryUrl;
+                                const categoryId = card.getAttribute('data-category-id');
+                                if (categoryId) {
+                                    // Redirect to products list filtered by category
+                                    window.location.href = '/producto/listado?categoria=' + categoryId;
                                 }
                             }
                         });

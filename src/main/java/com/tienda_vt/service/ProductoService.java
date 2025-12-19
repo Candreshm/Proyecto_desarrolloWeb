@@ -33,7 +33,16 @@ public class ProductoService {
             return productoRepository.findByActivoTrue();
         }
         return productoRepository.findAll();
-    }  
+    }
+    
+    // Add this method to get products by category
+    @Transactional(readOnly=true)
+    public List<Producto> getProductosByCategoria(Integer idCategoria, boolean activo) {
+        if (activo) {
+            return productoRepository.findByCategoriaIdCategoriaAndActivoTrue(idCategoria);
+        }
+        return productoRepository.findByCategoriaIdCategoria(idCategoria);
+    }
     
     @Transactional(readOnly=true)
     public Optional<Producto> getProducto(Integer idProducto) {

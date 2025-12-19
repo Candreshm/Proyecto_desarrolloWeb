@@ -44,30 +44,6 @@
                             </button>
                         </form>
                         <div class="d-flex align-items-center ms-auto">
-                        <ul class="navbar-nav" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_VENDEDOR')">
-                            <li class="nav-item px-2"><a class="nav-link" th:href="@{/categoria/listado}">[[#{plantilla.categorias}]]</a></li>
-                            <li class="nav-item px-2"><a class="nav-link" th:href="@{/producto/listado}">[[#{plantilla.productos}]]</a></li>
-                            <li class="nav-item px-2"><a class="nav-link" th:href="@{/consultas/listado}">[[#{plantilla.consultas}]]</a></li>
-                            <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                                    [[#{plantilla.admin}]]</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" th:href="@{/usuario/listado}">[[#{plantilla.usuarios}]]</a></li>                                    
-                                    <li class="submenu submenu-md dropend">
-                                        <a class="dropdown-item dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                           onclick="event.stopPropagation();">
-                                            [[#{plantilla.seguridad}]]
-                                        </a>
-                                        <ul class="dropdown-menu">                                            
-                                            <li><a class="dropdown-item" th:href="@{/role/listado}">[[#{plantilla.troles}]]</a></li>
-                                            <li><a class="dropdown-item" th:href="@{/usuario_rol/mantenimiento}">[[#{plantilla.permisos}]]</a></li>
-                                            <li><a class="dropdown-item" th:href="@{/ruta/listado}">[[#{plantilla.rutas}]]</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a class="dropdown-item" th:href="@{/constante/listado}">[[#{plantilla.constantes}]]</a></li>
-                                </ul>
-                            </li>
-                        </ul>
                             <!-- Cart Badge -->
                             <div class="nav-item me-3 position-relative">
                                 <a class="nav-link cart-link" 
@@ -119,33 +95,99 @@
                                 </ul>
                             </div>
                             
-                            <!-- Options Dropdown -->
+                            <!-- Options Dropdown - Consolidated with all admin functions -->
                             <div class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-cog fa-lg text-dark me-1"></i>
                                     <span class="d-none d-md-inline">Opciones</span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li class="dropdown-header">Idioma</li>
-                                    <li><a class="dropdown-item" th:href="@{/(lang=es)}">Español</a></li>
-                                    <li><a class="dropdown-item" th:href="@{/(lang=en)}">English</a></li>
-                                    <li><a class="dropdown-item" th:href="@{/(lang=fr)}">Française</a></li>
-                                    <li><a class="dropdown-item" th:href="@{/(lang=pt)}">Portugaise</a></li>
-                                    <li sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_VENDEDOR')"><hr class="dropdown-divider"></li>
-                                    <li sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_VENDEDOR')" class="dropdown-header">Administración</li>
+                                    <!-- Language Section -->
+                                    <li class="dropdown-header">
+                                        <i class="fas fa-language me-2"></i>Idioma
+                                    </li>
+                                    <li><a class="dropdown-item" th:href="@{/(lang=es)}">
+                                        <i class="fas fa-flag me-2"></i>Español
+                                    </a></li>
+                                    <li><a class="dropdown-item" th:href="@{/(lang=en)}">
+                                        <i class="fas fa-flag me-2"></i>English
+                                    </a></li>
+                                    <li><a class="dropdown-item" th:href="@{/(lang=fr)}">
+                                        <i class="fas fa-flag me-2"></i>Française
+                                    </a></li>
+                                    <li><a class="dropdown-item" th:href="@{/(lang=pt)}">
+                                        <i class="fas fa-flag me-2"></i>Portugaise
+                                    </a></li>
+                                    
+                                    <!-- Administration Section - For Admin and Vendedor -->
+                                    <li sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_VENDEDOR')">
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_VENDEDOR')" class="dropdown-header">
+                                        <i class="fas fa-cogs me-2"></i>Administración
+                                    </li>
+                                    
+                                    <!-- Categories -->
                                     <li sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_VENDEDOR')">
                                         <a class="dropdown-item" th:href="@{/categoria/listado}">
-                                            <i class="fas fa-tags me-2"></i>[[#{plantilla.categorias}]]
+                                            <i class="fas fa-tags me-2 text-success"></i>[[#{plantilla.categorias}]]
                                         </a>
                                     </li>
+                                    
+                                    <!-- Products -->
                                     <li sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_VENDEDOR')">
                                         <a class="dropdown-item" th:href="@{/producto/listado}">
-                                            <i class="fas fa-box me-2"></i>[[#{plantilla.productos}]]
+                                            <i class="fas fa-box me-2 text-success"></i>[[#{plantilla.productos}]]
                                         </a>
                                     </li>
+                                    
+                                    <!-- Consultas -->
+                                    <li sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_VENDEDOR')">
+                                        <a class="dropdown-item" th:href="@{/consultas/listado}">
+                                            <i class="fas fa-search me-2 text-success"></i>[[#{plantilla.consultas}]]
+                                        </a>
+                                    </li>
+                                    
+                                    <!-- Admin Only Section -->
+                                    <li sec:authorize="hasRole('ROLE_ADMIN')">
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li sec:authorize="hasRole('ROLE_ADMIN')" class="dropdown-header">
+                                        <i class="fas fa-shield-alt me-2"></i>Seguridad
+                                    </li>
+                                    
+                                    <!-- Users -->
                                     <li sec:authorize="hasRole('ROLE_ADMIN')">
                                         <a class="dropdown-item" th:href="@{/usuario/listado}">
-                                            <i class="fas fa-users me-2"></i>[[#{plantilla.usuarios}]]
+                                            <i class="fas fa-users me-2 text-success"></i>[[#{plantilla.usuarios}]]
+                                        </a>
+                                    </li>
+                                    
+                                    <!-- Roles -->
+                                    <li sec:authorize="hasRole('ROLE_ADMIN')">
+                                        <a class="dropdown-item" th:href="@{/role/listado}">
+                                            <i class="fas fa-user-shield me-2 text-success"></i>[[#{plantilla.troles}]]
+                                        </a>
+                                    </li>
+                                    
+                                    <!-- Permissions (Usuario Rol) -->
+                                    <li sec:authorize="hasRole('ROLE_ADMIN')">
+                                        <a class="dropdown-item" th:href="@{/usuario_rol/mantenimiento}">
+                                            <i class="fas fa-key me-2 text-success"></i>[[#{plantilla.permisos}]]
+                                        </a>
+                                    </li>
+                                    
+                                    <!-- Routes (Rutas) -->
+                                    <li sec:authorize="hasRole('ROLE_ADMIN')">
+                                        <a class="dropdown-item" th:href="@{/ruta/listado}">
+                                            <i class="fas fa-route me-2 text-success"></i>[[#{plantilla.rutas}]]
+                                        </a>
+                                    </li>
+                                    
+                                    <!-- Environment Constants -->
+                                    <li sec:authorize="hasRole('ROLE_ADMIN')">
+                                        <a class="dropdown-item" th:href="@{/constante/listado}">
+                                            <i class="fas fa-sliders-h me-2 text-success"></i>[[#{plantilla.constantes}]]
                                         </a>
                                     </li>
                                 </ul>

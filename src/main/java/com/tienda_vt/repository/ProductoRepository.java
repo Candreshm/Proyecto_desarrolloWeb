@@ -24,6 +24,12 @@ public interface ProductoRepository extends JpaRepository <Producto, Integer> {
     
     public List<Producto> findByPrecioBetweenOrderByPrecioAsc(BigDecimal precioInf, BigDecimal precioSup);
     
+    // Add this method to find products by category
+    public List<Producto> findByCategoriaIdCategoria(Integer idCategoria);
+    
+    // Add this method to find active products by category
+    public List<Producto> findByCategoriaIdCategoriaAndActivoTrue(Integer idCategoria);
+    
     @Query(value="SELECT p FROM Producto p WHERE p.precio BETWEEN :precioInf AND :precioSup ORDER BY p.precio ASC")
     public List<Producto> consultaJPQL(BigDecimal precioInf, BigDecimal precioSup);
     

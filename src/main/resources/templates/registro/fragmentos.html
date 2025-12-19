@@ -6,98 +6,96 @@
     <body>
         <!-- 1 Fragmento para nuevo usuario -->
         <section th:fragment="nuevoUsuario">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-md-6 col-lg-5 col-xl-4">
-                        <div class="card login-card shadow-lg border-0">
-                            <div class="card-header login-header text-white text-center py-3">
-                                <h3 class="mb-0">
-                                    <i class="fas fa-user-plus me-2"></i>[[#{usuario.agregar}]]
-                                </h3>
-                            </div>
-                            <div class="card-body p-4">
-                                <form method="POST" th:action="@{/registro/crearUsuario}" th:object="${usuario}" class="was-validated">
-                                    <!-- Username Field -->
-                                    <div class="mb-4">
-                                        <label class="form-label fw-semibold text-dark">
-                                            <i class="fas fa-user me-2 text-success"></i>[[#{usuario.username}]]
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text login-input-icon">
-                                                <i class="fas fa-user"></i>
-                                            </span>
-                                            <input type="text" 
-                                                   class="form-control login-input" 
-                                                   name="username" 
-                                                   maxlength="30" 
-                                                   th:field="*{username}" 
-                                                   required/>
-                                        </div>
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6 col-xl-5">
+                    <div class="card login-card shadow-lg border-0">
+                        <div class="card-header login-header text-white text-center py-3">
+                            <h3 class="mb-0">
+                                <i class="fas fa-user-plus me-2"></i>[[#{usuario.agregar}]]
+                            </h3>
+                        </div>
+                        <div class="card-body p-4">
+                            <form method="POST" th:action="@{/registro/crearUsuario}" th:object="${usuario}" class="was-validated">
+                                <!-- Username Field -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold text-dark">
+                                        <i class="fas fa-user me-2 text-success"></i>[[#{usuario.username}]]
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text login-input-icon">
+                                            <i class="fas fa-user"></i>
+                                        </span>
+                                        <input type="text" 
+                                               class="form-control login-input" 
+                                               name="username" 
+                                               maxlength="30" 
+                                               th:field="*{username}" 
+                                               required/>
                                     </div>
-                                    
-                                    <!-- Nombre Field -->
-                                    <div class="mb-4">
-                                        <label class="form-label fw-semibold text-dark">
-                                            <i class="fas fa-id-card me-2 text-success"></i>[[#{usuario.nombre}]]
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text login-input-icon">
-                                                <i class="fas fa-id-card"></i>
-                                            </span>
-                                            <input type="text" 
-                                                   class="form-control login-input" 
-                                                   name="nombre" 
-                                                   maxlength="20" 
-                                                   th:field="*{nombre}"/>
-                                        </div>
+                                </div>
+                                
+                                <!-- Nombre Field -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold text-dark">
+                                        <i class="fas fa-id-card me-2 text-success"></i>[[#{usuario.nombre}]]
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text login-input-icon">
+                                            <i class="fas fa-id-card"></i>
+                                        </span>
+                                        <input type="text" 
+                                               class="form-control login-input" 
+                                               name="nombre" 
+                                               maxlength="20" 
+                                               th:field="*{nombre}"/>
                                     </div>
-                                    
-                                    <!-- Apellidos Field -->
-                                    <div class="mb-4">
-                                        <label class="form-label fw-semibold text-dark">
-                                            <i class="fas fa-id-badge me-2 text-success"></i>[[#{usuario.apellidos}]]
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text login-input-icon">
-                                                <i class="fas fa-id-badge"></i>
-                                            </span>
-                                            <input type="text" 
-                                                   class="form-control login-input" 
-                                                   name="apellidos" 
-                                                   maxlength="30" 
-                                                   th:field="*{apellidos}"/>
-                                        </div>
+                                </div>
+                                
+                                <!-- Apellidos Field -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold text-dark">
+                                        <i class="fas fa-id-badge me-2 text-success"></i>[[#{usuario.apellidos}]]
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text login-input-icon">
+                                            <i class="fas fa-id-badge"></i>
+                                        </span>
+                                        <input type="text" 
+                                               class="form-control login-input" 
+                                               name="apellidos" 
+                                               maxlength="30" 
+                                               th:field="*{apellidos}"/>
                                     </div>
-                                    
-                                    <!-- Correo Field -->
-                                    <div class="mb-4">
-                                        <label class="form-label fw-semibold text-dark">
-                                            <i class="fas fa-envelope me-2 text-success"></i>[[#{usuario.correo}]]
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text login-input-icon">
-                                                <i class="fas fa-envelope"></i>
-                                            </span>
-                                            <input type="email" 
-                                                   class="form-control login-input" 
-                                                   name="correo" 
-                                                   maxlength="75" 
-                                                   th:field="*{correo}" 
-                                                   required/>
-                                        </div>
+                                </div>
+                                
+                                <!-- Correo Field -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold text-dark">
+                                        <i class="fas fa-envelope me-2 text-success"></i>[[#{usuario.correo}]]
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text login-input-icon">
+                                            <i class="fas fa-envelope"></i>
+                                        </span>
+                                        <input type="email" 
+                                               class="form-control login-input" 
+                                               name="correo" 
+                                               maxlength="75" 
+                                               th:field="*{correo}" 
+                                               required/>
                                     </div>
-                                    
-                                    <!-- Action Buttons -->
-                                    <div class="d-grid gap-2 mt-4">
-                                        <button type="submit" class="btn login-btn-primary">
-                                            <i class="fas fa-envelope me-2"></i>[[#{usuario.activacion}]]
-                                        </button>
-                                        <a th:href="@{/login}" class="btn login-btn-secondary">
-                                            <i class="fas fa-arrow-left me-2"></i>[[#{accion.regresar}]]
-                                        </a>
-                                    </div>
-                                </form>
-                            </div>
+                                </div>
+                                
+                                <!-- Action Buttons -->
+                                <div class="d-grid gap-2 mt-4">
+                                    <button type="submit" class="btn login-btn-primary">
+                                        <i class="fas fa-envelope me-2"></i>[[#{usuario.activacion}]]
+                                    </button>
+                                    <a th:href="@{/login}" class="btn login-btn-secondary">
+                                        <i class="fas fa-arrow-left me-2"></i>[[#{accion.regresar}]]
+                                    </a>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -152,65 +150,63 @@
 
         <!-- 3 Fragmento para recordar usuario -->
         <section th:fragment="recordarUsuario">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-md-6 col-lg-5 col-xl-4">
-                        <div class="card login-card shadow-lg border-0">
-                            <div class="card-header login-header text-white text-center py-3">
-                                <h3 class="mb-0">
-                                    <i class="fas fa-key me-2"></i>[[#{registro.recordar.us}]]
-                                </h3>
-                            </div>
-                            <div class="card-body p-4">
-                                <form method="POST"
-                                      th:action="@{/registro/recordarUsuario}" 
-                                      th:object="${usuario}"
-                                      class="was-validated">
-                                    <!-- Username Field -->
-                                    <div class="mb-4">
-                                        <label class="form-label fw-semibold text-dark">
-                                            <i class="fas fa-user me-2 text-success"></i>[[#{usuario.username}]]
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text login-input-icon">
-                                                <i class="fas fa-user"></i>
-                                            </span>
-                                            <input type="text" 
-                                                   class="form-control login-input" 
-                                                   name="username" 
-                                                   th:field="*{username}" 
-                                                   maxlength="30"/>
-                                        </div>
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6 col-xl-5">
+                    <div class="card login-card shadow-lg border-0">
+                        <div class="card-header login-header text-white text-center py-3">
+                            <h3 class="mb-0">
+                                <i class="fas fa-key me-2"></i>[[#{registro.recordar.us}]]
+                            </h3>
+                        </div>
+                        <div class="card-body p-4">
+                            <form method="POST"
+                                  th:action="@{/registro/recordarUsuario}" 
+                                  th:object="${usuario}"
+                                  class="was-validated">
+                                <!-- Username Field -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold text-dark">
+                                        <i class="fas fa-user me-2 text-success"></i>[[#{usuario.username}]]
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text login-input-icon">
+                                            <i class="fas fa-user"></i>
+                                        </span>
+                                        <input type="text" 
+                                               class="form-control login-input" 
+                                               name="username" 
+                                               th:field="*{username}" 
+                                               maxlength="30"/>
                                     </div>
-                                    
-                                    <!-- Correo Field -->
-                                    <div class="mb-4">
-                                        <label class="form-label fw-semibold text-dark">
-                                            <i class="fas fa-envelope me-2 text-success"></i>[[#{usuario.correo}]]
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text login-input-icon">
-                                                <i class="fas fa-envelope"></i>
-                                            </span>
-                                            <input type="email" 
-                                                   class="form-control login-input" 
-                                                   name="correo" 
-                                                   th:field="*{correo}" 
-                                                   maxlength="75"/>
-                                        </div>
+                                </div>
+                                
+                                <!-- Correo Field -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold text-dark">
+                                        <i class="fas fa-envelope me-2 text-success"></i>[[#{usuario.correo}]]
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text login-input-icon">
+                                            <i class="fas fa-envelope"></i>
+                                        </span>
+                                        <input type="email" 
+                                               class="form-control login-input" 
+                                               name="correo" 
+                                               th:field="*{correo}" 
+                                               maxlength="75"/>
                                     </div>
-                                    
-                                    <!-- Action Buttons -->
-                                    <div class="d-grid gap-2 mt-4">
-                                        <button type="submit" class="btn login-btn-primary">
-                                            <i class="fas fa-address-card me-2"></i>[[#{registro.recordar.us}]]
-                                        </button>
-                                        <a th:href="@{/login}" class="btn login-btn-secondary">
-                                            <i class="fas fa-arrow-left me-2"></i>[[#{accion.regresar}]]
-                                        </a>
-                                    </div>
-                                </form>
-                            </div>
+                                </div>
+                                
+                                <!-- Action Buttons -->
+                                <div class="d-grid gap-2 mt-4">
+                                    <button type="submit" class="btn login-btn-primary">
+                                        <i class="fas fa-address-card me-2"></i>[[#{registro.recordar.us}]]
+                                    </button>
+                                    <a th:href="@{/login}" class="btn login-btn-secondary">
+                                        <i class="fas fa-arrow-left me-2"></i>[[#{accion.regresar}]]
+                                    </a>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

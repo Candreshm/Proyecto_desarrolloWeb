@@ -25,8 +25,8 @@ function addCart(formulario) {
             }
         },
         success: function (response) {
-            // Actualiza el fragmento HTML del carrito
-            $("#resultBlock").html(response);
+            // Update cart badge
+            actualizarBadgeCarrito();
             console.log("Producto agregado con cantidad por defecto (1).");
         },
         error: function (xhr, status, error) {
@@ -36,6 +36,42 @@ function addCart(formulario) {
         }
     });
 }
+
+/**
+ * Actualiza el badge del carrito con la cantidad de items
+ */
+function actualizarBadgeCarrito() {
+    $.ajax({
+        url: '/carrito/cantidad',
+        type: 'GET',
+        success: function (cantidad) {
+            var badge = $('#cartBadge');
+            if (cantidad > 0) {
+                badge.text(cantidad);
+                badge.show();
+            } else {
+                badge.hide();
+            }
+        },
+        error: function () {
+            console.log("Error al obtener cantidad del carrito");
+        }
+    });
+}
+
+/**
+ * Maneja el click en el carrito - redirige a login si no está autenticado
+ */
+function handleCartClick(event) {
+    // Esta función solo se ejecuta si el usuario NO está autenticado
+    // Si está autenticado, el link normal funciona
+    return true;
+}
+
+// Actualizar badge al cargar la página
+$(document).ready(function() {
+    actualizarBadgeCarrito();
+});
 
 // funcion para hacer un preview de una imagen 
 function mostrarImagen(input) {
@@ -57,11 +93,13 @@ function mostrarImagen(input) {
 //Para insertar información en el modal según el registro...
 document.addEventListener('DOMContentLoaded', function () {
     const confirmModal = document.getElementById('confirmModal');
-    confirmModal.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget;
-        document.getElementById('modalId').value = button.getAttribute('data-bs-id');
-        document.getElementById('modalDescripcion').textContent = button.getAttribute('data-bs-descripcion');
-    });
+    if (confirmModal) {
+        confirmModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            document.getElementById('modalId').value = button.getAttribute('data-bs-id');
+            document.getElementById('modalDescripcion').textContent = button.getAttribute('data-bs-descripcion');
+        });
+    }
 });
 
 //Para quitar toast

@@ -732,3 +732,119 @@
     border-color: #4caf50;
     box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
 }
+
+/* Login Page Styles */
+body.min-vh-100 {
+    min-height: 100vh;
+}
+
+.login-card {
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.login-header {
+    background: linear-gradient(135deg, #4caf50 0%, #66bb6a 50%, #81c784 100%) !important;
+    border: none;
+    padding: 1.5rem !important;
+}
+
+.login-header h3 {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.login-input-icon {
+    background-color: #e8f5e9;
+    border: 2px solid #c8e6c9;
+    border-right: none;
+    color: #2e7d32;
+    border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.login-input {
+    border: 2px solid #c8e6c9;
+    border-left: none;
+    border-radius: 0 0.5rem 0.5rem 0;
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.login-input:focus {
+    border-color: #4caf50;
+    background-color: white;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+    outline: none;
+}
+
+.login-input:focus + .input-group-text,
+.login-input:focus ~ .input-group-text {
+    border-color: #4caf50;
+}
+
+.input-group:focus-within .login-input-icon {
+    border-color: #4caf50;
+    background-color: #c8e6c9;
+}
+
+.login-btn-primary {
+    background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.login-btn-primary:hover {
+    background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+    color: white;
+}
+
+.login-btn-primary:active {
+    transform: translateY(0);
+}
+
+.login-btn-secondary {
+    background-color: #e8f5e9;
+    border: 2px solid #4caf50;
+    color: #2e7d32;
+    font-weight: 500;
+    padding: 0.6rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.login-btn-secondary:hover {
+    background-color: #4caf50;
+    border-color: #2e7d32;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.login-btn-secondary:active {
+    transform: translateY(0);
+}
+
+/* Ensure footer stays at bottom */
+.flex-grow-1 {
+    flex-grow: 1;
+}
+
+/* Login page specific adjustments */
+main.flex-grow-1 {
+    min-height: calc(100vh - 200px);
+}

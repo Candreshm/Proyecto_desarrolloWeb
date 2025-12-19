@@ -3,47 +3,85 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     <head th:replace="~{general/fragmentos :: head}"/>
-    <body>
+    <body class="d-flex flex-column min-vh-100">
         <header th:replace="~{general/fragmentos :: header}"/>
-        <div class="row my-5">
-            <div class="col-md-4 offset-md-4">
-                <div class="card">
-                    <div class="card-header bg-success text-white text-center">
-                        <h2>[[#{login.login}]]</h2>
-                    </div>
-                    <div class="card-body">
-                        <form method="POST" th:action="@{/login}">
-                            <!-- Formulario y campos -->
-                            <div class="row my-3">
-                                <label for="username" class="col-md-1 my-auto"><i class="fas fa-user-lock"></i></label>
-                                <div class="col-md-11 my-auto">
-                                    <input class="form-control" id="username" type="text" name="username" th:placeholder="#{login.username}"/>
+        
+        <main class="flex-grow-1 d-flex align-items-center justify-content-center py-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-6 col-lg-5 col-xl-4">
+                        <div class="card login-card shadow-lg border-0">
+                            <div class="card-header login-header text-white text-center py-3">
+                                <h3 class="mb-0">
+                                    <i class="fas fa-shield-alt me-2"></i>[[#{login.login}]]
+                                </h3>
+                            </div>
+                            <div class="card-body p-4">
+                                <form method="POST" th:action="@{/login}">
+                                    <!-- Username Field -->
+                                    <div class="mb-4">
+                                        <label for="username" class="form-label fw-semibold text-dark">
+                                            <i class="fas fa-user me-2 text-success"></i>[[#{login.username}]]
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text login-input-icon">
+                                                <i class="fas fa-user"></i>
+                                            </span>
+                                            <input class="form-control login-input" 
+                                                   id="username" 
+                                                   type="text" 
+                                                   name="username" 
+                                                   th:placeholder="#{login.username}"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Password Field -->
+                                    <div class="mb-4">
+                                        <label for="password" class="form-label fw-semibold text-dark">
+                                            <i class="fas fa-lock me-2 text-success"></i>[[#{login.password}]]
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text login-input-icon">
+                                                <i class="fas fa-lock"></i>
+                                            </span>
+                                            <input class="form-control login-input" 
+                                                   id="password" 
+                                                   type="password" 
+                                                   name="password" 
+                                                   th:placeholder="#{login.password}"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Action Buttons -->
+                                    <div class="d-grid gap-2 mt-4">
+                                        <button class="btn login-btn-primary" type="submit">
+                                            <i class="fas fa-sign-in-alt me-2"></i>[[#{login.login}]]
+                                        </button>
+                                        
+                                        <div class="d-flex justify-content-between gap-2 mt-3">
+                                            <a th:href="@{/registro/nuevo}" class="btn login-btn-secondary flex-fill">
+                                                <i class="fas fa-user-plus me-1"></i>[[#{accion.registrar}]]
+                                            </a>
+                                            <a th:href="@{/registro/recordar}" class="btn login-btn-secondary flex-fill">
+                                                <i class="fas fa-envelope me-1"></i>[[#{accion.recordar}]]
+                                            </a>
+                                        </div>
+                                    </div>
+                                </form>
+                                
+                                <!-- Error Message -->
+                                <div th:if="${param.error != null}" class="alert alert-danger mt-4 text-center" role="alert">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>[[#{error.login}]]
                                 </div>
                             </div>
-                            <div class="row my-3">
-                                <label for="password" class="col-md-1 my-auto"><i class="fas fa-key"></i></label>
-                                <div class="col-md-11 my-auto">
-                                    <input class="form-control" id="password" type="password" name="password" th:placeholder="#{login.password}"/>
-                                </div>
-                            </div>                            
-                            <!-- Botones y enlaces -->
-                            <div class="d-flex justify-content-around mt-4">
-                                <!-- Enlace de registro (con estilo de botón) -->
-                                <a th:href="@{/registro/nuevo}" class="btn btn-primary"><i class="fas fa-user-plus"></i> [[#{accion.registrar}]]</a>                                
-                                <!-- Enlace para recordar contraseña -->
-                                <a th:href="@{/registro/recordar}" class="btn btn-info"><i class="fas fa-envelope"></i> [[#{accion.recordar}]]</a>                                
-                                <!-- Botón para enviar el formulario -->
-                                <button class="btn btn-success" type="submit"><i class="fas fa-sign-in-alt"></i> [[#{login.login}]]</button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
-                </div>
-                <!-- Manejo de Errores -->
-                <div th:if="${param.error != null}" class="alert alert-danger mt-3 text-center" role="alert">
-                    [[#{error.login}]]
                 </div>
             </div>
-        </div>
+        </main>
+        
         <footer th:replace="~{general/fragmentos :: footer}"/>
     </body>
 </html>

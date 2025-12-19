@@ -60,6 +60,33 @@
                                 </ul>
                             </li>
                         </ul>
+                            <!-- Cart Badge -->
+                            <div class="nav-item me-3 position-relative">
+                                <a class="nav-link cart-link" 
+                                   th:href="@{/carrito/listado}" 
+                                   sec:authorize="isAuthenticated()"
+                                   onclick="return handleCartClick(event);"
+                                   style="cursor: pointer;">
+                                    <i class="fas fa-shopping-cart fa-lg text-dark"></i>
+                                    <span class="badge bg-success position-absolute top-0 start-100 translate-middle cart-badge" 
+                                          id="cartBadge" 
+                                          style="display: none;">
+                                        0
+                                    </span>
+                                </a>
+                                <a class="nav-link cart-link" 
+                                   th:href="@{/login?redirect=/carrito/listado}" 
+                                   sec:authorize="!isAuthenticated()"
+                                   style="cursor: pointer;">
+                                    <i class="fas fa-shopping-cart fa-lg text-dark"></i>
+                                    <span class="badge bg-success position-absolute top-0 start-100 translate-middle cart-badge" 
+                                          id="cartBadge" 
+                                          style="display: none;">
+                                        0
+                                    </span>
+                                </a>
+                            </div>
+                            
                             <!-- User Icon -->
                             <div class="nav-item dropdown me-3">
                                 <a class="nav-link" th:href="@{/login}" sec:authorize="!isAuthenticated()" role="button">

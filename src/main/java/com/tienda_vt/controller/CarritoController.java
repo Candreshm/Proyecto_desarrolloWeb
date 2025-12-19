@@ -25,6 +25,14 @@ public class CarritoController {
         this.facturaService = facturaService;
     }
 
+    // --- NEW: Get cart count for header badge ---
+    @GetMapping("/carrito/cantidad")
+    @ResponseBody
+    public int obtenerCantidadCarrito(HttpSession session) {
+        List<Item> carrito = carritoService.obtenerCarrito(session);
+        return carritoService.contarUnidades(carrito);
+    }
+
     // --- 1. MOSTRAR EL CARRITO ---
     @GetMapping("/carrito/listado")
     public String listado(HttpSession session, Model model) {

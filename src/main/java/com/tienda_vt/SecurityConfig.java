@@ -32,6 +32,13 @@ public class SecurityConfig {
                 requests.requestMatchers("/categoria/listado", "/categoria/listado/**").permitAll();
                 requests.requestMatchers("/consultas/listado", "/consultas/**").permitAll();
                 
+                // Allow adding to cart without authentication (uses session)
+                requests.requestMatchers("/carrito/agregar").permitAll();
+                requests.requestMatchers("/carrito/cantidad").permitAll();
+                
+                // Require authentication for viewing and managing cart
+                requests.requestMatchers("/carrito/listado", "/carrito/**").authenticated();
+                
                 // Process dynamic routes from database
                 for (Ruta ruta : rutas){
                     if(ruta.isRequiereRol()){
@@ -40,8 +47,6 @@ public class SecurityConfig {
                         requests.requestMatchers(ruta.getRuta()).permitAll();
                     }
                 }
-                // Require authentication for cart operations
-                requests.requestMatchers("/carrito/**").authenticated();
                 requests.anyRequest().authenticated();
         });
 

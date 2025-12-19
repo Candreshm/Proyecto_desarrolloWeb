@@ -457,9 +457,17 @@
     position: relative;
 }
 
-.category-management-card:hover {
+.category-clickable-card {
+    cursor: pointer;
+}
+
+.category-clickable-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
+}
+
+.category-clickable-card:active {
+    transform: translateY(-2px);
 }
 
 .category-management-card .card-img-top-container {

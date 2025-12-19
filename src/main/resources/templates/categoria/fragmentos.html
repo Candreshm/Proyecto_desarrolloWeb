@@ -55,7 +55,9 @@
                 <div th:if="${categorias != null and !categorias.empty}">
                     <div class="row g-4">
                         <div th:each="c : ${categorias}" class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="card h-100 border-0 shadow-sm category-management-card">
+                            <div class="card h-100 border-0 shadow-sm category-management-card category-clickable-card" 
+                                 th:data-category-id="${c.idCategoria}"
+                                 style="cursor: pointer;">
                                 <div class="card-img-top-container bg-light d-flex justify-content-center align-items-center p-4" 
                                      style="height: 200px;">
                                     <img th:src="@{${c.rutaImagen}}" 
@@ -73,10 +75,12 @@
                                               class="badge bg-secondary">Inactiva</span>
                                     </div>
                                     <div class="mt-auto d-flex justify-content-center gap-2 category-action-buttons" 
-                                         sec:authorize="hasRole('ROLE_ADMIN')">
+                                         sec:authorize="hasRole('ROLE_ADMIN')"
+                                         onclick="event.stopPropagation();">
                                         <a th:href="@{/categoria/modificar/{id}(id=${c.idCategoria})}" 
                                            class="btn btn-warning category-btn-update"
-                                           title="[[#{accion.actualizar}]]">
+                                           title="[[#{accion.actualizar}]]"
+                                           onclick="event.stopPropagation();">
                                             <i class="fas fa-pencil-alt"></i>
                                         </a>
                                         <button type="button" 
@@ -85,7 +89,8 @@
                                                 data-bs-target="#confirmModal"
                                                 th:data-bs-id="${c.idCategoria}"
                                                 th:data-bs-descripcion="${c.descripcion}"
-                                                title="[[#{accion.eliminar}]]">
+                                                title="[[#{accion.eliminar}]]"
+                                                onclick="event.stopPropagation();">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
                                     </div>
@@ -132,6 +137,27 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- JavaScript to handle category card clicks -->
+            <script th:inline="javascript">
+                document.addEventListener('DOMContentLoaded', function() {
+                    const categoryCards = document.querySelectorAll('.category-clickable-card');
+                    
+                    categoryCards.forEach(function(card) {
+                        card.addEventListener('click', function(event) {
+                            // Only navigate if the click wasn't on a button or link
+                            if (!event.target.closest('.category-action-buttons') && 
+                                !event.target.closest('a') && 
+                                !event.target.closest('button')) {
+                                const categoryId = card.getAttribute('data-category-id');
+                                if (categoryId) {
+                                    window.location.href = /*[[@{/consultas/}]]*/ '' + categoryId;
+                                }
+                            }
+                        });
+                    });
+                });
+            </script>
         </section>
 
         <!-- 3 Fragmento que se utiliza en la página modifca.html -->

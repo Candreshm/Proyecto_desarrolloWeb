@@ -56,10 +56,8 @@ public class ProductoService {
     
     @Transactional(readOnly=true)
     public List<Producto> buscarProductosPorPrecio(String buscar, BigDecimal precioInf, BigDecimal precioSup) {
-        if (buscar == null || buscar.trim().isEmpty()) {
-            return productoRepository.findByPrecioBetweenOrderByPrecioAsc(precioInf, precioSup);
-        }
-        return productoRepository.buscarProductosPorPrecio(buscar.trim(), precioInf, precioSup);
+        // Use the advanced search method instead
+        return busquedaAvanzada(buscar, precioInf, precioSup, null, null, null);
     }
     
     // Advanced search method

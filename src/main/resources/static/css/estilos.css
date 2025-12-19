@@ -16,7 +16,8 @@
     align-items: center;
     animation: gradientShift 8s ease infinite;
     position: relative;
-    overflow: hidden;
+    overflow: visible; /* Changed from hidden to visible to prevent text cutoff */
+    padding: 3rem 2.5rem !important; /* Increased padding */
 }
 
 /* Animated gradient background */
@@ -60,6 +61,7 @@
     line-height: 1.2;
     white-space: normal;
     word-wrap: break-word;
+    margin-bottom: 1rem;
 }
 
 /* Ensure "Tu salud," stays on first line and "nuestra prioridad" on second */

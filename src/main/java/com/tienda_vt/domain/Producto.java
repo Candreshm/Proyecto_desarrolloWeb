@@ -28,7 +28,6 @@ public class Producto implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idProducto;
-    //private Integer idCategoria;
     
     @Column(unique=true, nullable=false, length=50)
     @NotNull
@@ -52,9 +51,11 @@ public class Producto implements Serializable {
     private String rutaImagen;
     private boolean activo;
     
+    @Column(length=50)
+    @Size(max=50)
+    private String ubicacion; // Nueva columna para ubicación (Heredia, San Jose, Alajuela)
+    
     @ManyToOne
     @JoinColumn(name="id_categoria")
     private Categoria categoria;
-    
-    
 }

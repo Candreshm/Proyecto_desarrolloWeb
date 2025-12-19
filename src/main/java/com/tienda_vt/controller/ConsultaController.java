@@ -11,10 +11,9 @@ import com.tienda_vt.service.ProductoService;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.tienda_vt.service.CategoriaService;
 import java.math.BigDecimal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.util.List;
 
 /**
  *
@@ -34,31 +33,53 @@ public class ConsultaController {
 
     @GetMapping("/listado")
     public String listado(@RequestParam(required = false) String buscar,
+                          @RequestParam(required = false) String keywords,
                           @RequestParam(required = false) BigDecimal precioInf,
                           @RequestParam(required = false) BigDecimal precioSup,
+                          @RequestParam(required = false) String ubicacion,
+                          @RequestParam(required = false) Integer existenciasMin,
+                          @RequestParam(required = false) Integer existenciasMax,
                           Model model) {
-        var productos = productoService.getProductos(false);
         
-        // Apply search filter if provided
-        if (buscar != null && !buscar.trim().isEmpty()) {
-            productos = productoService.buscarProductos(buscar);
-        }
+        List<com.tienda_vt.domain.Producto> productos;
         
-        // Apply price filter if provided
-        if (precioInf != null && precioSup != null) {
-            if (buscar != null && !buscar.trim().isEmpty()) {
-                // Both search and price filter
-                productos = productoService.buscarProductosPorPrecio(buscar, precioInf, precioSup);
-            } else {
-                // Only price filter
-                productos = productoService.consultaDerivada(precioInf, precioSup);
+        // Check if any advanced filter is being used
+        boolean hasAdvancedFilters = (precioInf != null && precioSup != null) ||
+                                     (ubicacion != null && !ubicacion.trim().isEmpty()) ||
+                                     (existenciasMin != null) ||
+                                     (existenciasMax != null) ||
+                                     (keywords != null && !keywords.trim().isEmpty());
+        
+        if (hasAdvancedFilters || (buscar != null && !buscar.trim().isEmpty())) {
+            // Use advanced search
+            productos = productoService.busquedaAvanzada(
+                buscar != null ? buscar : keywords, // Use keywords if buscar is empty
+                precioInf,
+                precioSup,
+                ubicacion,
+                existenciasMin,
+                existenciasMax
+            );
+            
+            // If keywords are provided separately, filter by multiple keywords
+            if (keywords != null && !keywords.trim().isEmpty()) {
+                List<com.tienda_vt.domain.Producto> keywordResults = productoService.buscarPorKeywords(keywords);
+                // Intersection with existing results
+                productos.retainAll(keywordResults);
             }
+        } else {
+            // No filters, show all products
+            productos = productoService.getProductos(false);
         }
         
         model.addAttribute("productos", productos);
         model.addAttribute("buscar", buscar);
+        model.addAttribute("keywords", keywords);
         model.addAttribute("precioInf", precioInf);
         model.addAttribute("precioSup", precioSup);
+        model.addAttribute("ubicacion", ubicacion);
+        model.addAttribute("existenciasMin", existenciasMin);
+        model.addAttribute("existenciasMax", existenciasMax);
         
         // Add categories for tabs
         var categorias = categoriaService.getCategorias(true);
@@ -66,8 +87,4 @@ public class ConsultaController {
         
         return "/consultas/listado";
     }
-    
-    // Remove the old consultaDerivada, consultaJPQL, consultaSQL methods
-    // They are replaced by the combined search in listado method above
-
 }

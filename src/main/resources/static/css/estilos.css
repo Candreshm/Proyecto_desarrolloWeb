@@ -508,3 +508,23 @@
     font-size: 1rem;
     margin: 0;
 }
+
+/* Add Category Card */
+.category-add-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-top: 4px solid #4caf50 !important;
+}
+
+.category-add-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
+    background-color: #f8f9fa;
+}
+
+.category-add-card .card-img-top-container {
+    border-radius: 0.375rem 0.375rem 0 0;
+}
+
+.category-add-card .card-body {
+    min-height: 150px;
+}

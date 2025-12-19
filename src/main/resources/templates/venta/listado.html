@@ -103,16 +103,20 @@
         <!-- Chart.js CDN - Load before scripts -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
         
-        <!-- Data Storage for Charts using JSON in script tags -->
-        <script th:inline="javascript">
-            /*<![CDATA[*/
-            // Top Products Data
-            var topProductsData = /*[[${topProducts != null ? #lists.list(topProducts) : '[]'}]]*/ [];
-            
-            // Sales By Day Data  
-            var salesByDayData = /*[[${salesByDay != null ? #lists.list(salesByDay) : '[]'}]]*/ [];
-            /*]]>*/
-        </script>
+        <!-- Data Storage for Charts using data attributes -->
+        <div th:if="${topProducts != null and !topProducts.empty}" style="display: none;" id="topProductsData">
+            <div th:each="product : ${topProducts}" 
+                 th:data-product-name="${product.name}"
+                 th:data-product-quantity="${product.quantity}"
+                 class="product-data-item"></div>
+        </div>
+        
+        <div th:if="${salesByDay != null and !salesByDay.empty}" style="display: none;" id="salesByDayData">
+            <div th:each="sale : ${salesByDay}" 
+                 th:data-sale-date="${sale.date}"
+                 th:data-sale-count="${sale.count}"
+                 class="sale-day-data-item"></div>
+        </div>
         
         <!-- Chart Initialization Script -->
         <script>
@@ -126,69 +130,82 @@
                 }
                 
                 console.log('Chart.js loaded, initializing charts...');
+                
+                // Extract data from hidden divs
+                var topProductsData = [];
+                var salesByDayData = [];
+                
+                // Get top products data
+                var productDivs = document.querySelectorAll('.product-data-item');
+                productDivs.forEach(function(div) {
+                    var name = div.getAttribute('data-product-name');
+                    var quantity = parseInt(div.getAttribute('data-product-quantity')) || 0;
+                    if (name) {
+                        topProductsData.push({
+                            name: name,
+                            quantity: quantity
+                        });
+                    }
+                });
+                
+                // Get sales by day data
+                var saleDayDivs = document.querySelectorAll('.sale-day-data-item');
+                saleDayDivs.forEach(function(div) {
+                    var date = div.getAttribute('data-sale-date');
+                    var count = parseInt(div.getAttribute('data-sale-count')) || 0;
+                    if (date) {
+                        salesByDayData.push({
+                            date: date,
+                            count: count
+                        });
+                    }
+                });
+                
                 console.log('Top Products Data:', topProductsData);
                 console.log('Sales By Day Data:', salesByDayData);
                 
                 // Top Selling Products Chart
                 var topProductsCanvas = document.getElementById('topProductsChart');
-                if (topProductsCanvas && topProductsData && topProductsData.length > 0) {
+                if (topProductsCanvas && topProductsData.length > 0) {
                     try {
-                        // Convert Thymeleaf data structure to chart format
-                        var labels = [];
-                        var quantities = [];
-                        
-                        for (var i = 0; i < topProductsData.length; i++) {
-                            var product = topProductsData[i];
-                            // Handle both Map and object formats
-                            var name = product.name || product['name'] || '';
-                            var quantity = product.quantity || product['quantity'] || 0;
-                            
-                            if (name) {
-                                labels.push(name);
-                                quantities.push(parseInt(quantity) || 0);
-                            }
-                        }
+                        var labels = topProductsData.map(function(p) { return p.name; });
+                        var quantities = topProductsData.map(function(p) { return p.quantity; });
                         
                         console.log('Top Products Labels:', labels);
                         console.log('Top Products Quantities:', quantities);
                         
-                        if (labels.length > 0) {
-                            new Chart(topProductsCanvas.getContext('2d'), {
-                                type: 'bar',
-                                data: {
-                                    labels: labels,
-                                    datasets: [{
-                                        label: 'Quantity Sold',
-                                        data: quantities,
-                                        backgroundColor: 'rgba(76, 175, 80, 0.7)',
-                                        borderColor: 'rgba(76, 175, 80, 1)',
-                                        borderWidth: 2
-                                    }]
+                        new Chart(topProductsCanvas.getContext('2d'), {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Quantity Sold',
+                                    data: quantities,
+                                    backgroundColor: 'rgba(76, 175, 80, 0.7)',
+                                    borderColor: 'rgba(76, 175, 80, 1)',
+                                    borderWidth: 2
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        display: true,
+                                        position: 'top'
+                                    }
                                 },
-                                options: {
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                    plugins: {
-                                        legend: {
-                                            display: true,
-                                            position: 'top'
-                                        }
-                                    },
-                                    scales: {
-                                        y: {
-                                            beginAtZero: true,
-                                            ticks: {
-                                                stepSize: 1
-                                            }
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: {
+                                            stepSize: 1
                                         }
                                     }
                                 }
-                            });
-                            console.log('Top Products Chart created successfully');
-                        } else {
-                            topProductsCanvas.parentElement.innerHTML = 
-                                '<p class="text-center text-muted p-4"><i class="fas fa-info-circle me-2"></i>No product data available</p>';
-                        }
+                            }
+                        });
+                        console.log('Top Products Chart created successfully');
                     } catch (error) {
                         console.error('Error creating top products chart:', error);
                         topProductsCanvas.parentElement.innerHTML = 
@@ -201,71 +218,58 @@
                 
                 // Sales by Day Chart
                 var salesByDayCanvas = document.getElementById('salesByDayChart');
-                if (salesByDayCanvas && salesByDayData && salesByDayData.length > 0) {
+                if (salesByDayCanvas && salesByDayData.length > 0) {
                     try {
-                        var dateLabels = [];
-                        var counts = [];
-                        
-                        for (var i = 0; i < salesByDayData.length; i++) {
-                            var sale = salesByDayData[i];
-                            var dateStr = sale.date || sale['date'] || '';
-                            var count = sale.count || sale['count'] || 0;
-                            
-                            if (dateStr) {
-                                // Parse date (format: YYYY-MM-DD)
-                                var parts = dateStr.split('-');
+                        var dateLabels = salesByDayData.map(function(s) {
+                            if (s.date) {
+                                var parts = s.date.split('-');
                                 if (parts.length === 3) {
                                     var date = new Date(parts[0], parts[1] - 1, parts[2]);
-                                    dateLabels.push(date.toLocaleDateString('es-CR', { day: '2-digit', month: '2-digit' }));
-                                } else {
-                                    dateLabels.push(dateStr);
+                                    return date.toLocaleDateString('es-CR', { day: '2-digit', month: '2-digit' });
                                 }
-                                counts.push(parseInt(count) || 0);
+                                return s.date;
                             }
-                        }
+                            return '';
+                        });
+                        var counts = salesByDayData.map(function(s) { return s.count; });
                         
                         console.log('Sales By Day Labels:', dateLabels);
                         console.log('Sales By Day Counts:', counts);
                         
-                        if (dateLabels.length > 0) {
-                            new Chart(salesByDayCanvas.getContext('2d'), {
-                                type: 'line',
-                                data: {
-                                    labels: dateLabels,
-                                    datasets: [{
-                                        label: 'Number of Sales',
-                                        data: counts,
-                                        backgroundColor: 'rgba(76, 175, 80, 0.2)',
-                                        borderColor: 'rgba(76, 175, 80, 1)',
-                                        borderWidth: 3,
-                                        fill: true,
-                                        tension: 0.4
-                                    }]
+                        new Chart(salesByDayCanvas.getContext('2d'), {
+                            type: 'line',
+                            data: {
+                                labels: dateLabels,
+                                datasets: [{
+                                    label: 'Number of Sales',
+                                    data: counts,
+                                    backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                                    borderColor: 'rgba(76, 175, 80, 1)',
+                                    borderWidth: 3,
+                                    fill: true,
+                                    tension: 0.4
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        display: true,
+                                        position: 'top'
+                                    }
                                 },
-                                options: {
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                    plugins: {
-                                        legend: {
-                                            display: true,
-                                            position: 'top'
-                                        }
-                                    },
-                                    scales: {
-                                        y: {
-                                            beginAtZero: true,
-                                            ticks: {
-                                                stepSize: 1
-                                            }
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: {
+                                            stepSize: 1
                                         }
                                     }
                                 }
-                            });
-                            console.log('Sales By Day Chart created successfully');
-                        } else {
-                            salesByDayCanvas.parentElement.innerHTML = 
-                                '<p class="text-center text-muted p-4"><i class="fas fa-info-circle me-2"></i>No date data available</p>';
-                        }
+                            }
+                        });
+                        console.log('Sales By Day Chart created successfully');
                     } catch (error) {
                         console.error('Error creating sales by day chart:', error);
                         salesByDayCanvas.parentElement.innerHTML = 

@@ -19,22 +19,37 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class IndexController {
 
-    private final CategoriaService categoriaService;
-    private final ProductoService productoService;
+    @Autowired
+    private ProductoService productoService;
+    @Autowired
+    private CategoriaService categoriaService;
 
-    public IndexController(CategoriaService cSrv, ProductoService pSrv) {
-        this.categoriaService = cSrv;
-        this.productoService = pSrv;
+    @GetMapping("/")
+    public String listado(Model model) {
+        var productos = productoService.getProductos(false);
+        model.addAttribute("productos", productos);
+
+        var categorias = categoriaService.getCategorias(true);
+        model.addAttribute("categorias", categorias);
+
+        return "/index";
     }
 
-    @GetMapping({"/", "/inicio"})
-    public String home(Model model) {
-        // active categories (or all)
-        model.addAttribute("categorias", categoriaService.getCategorias(true));
-        // pick some “populars” – adapt to your logic (e.g., by sales or just first N actives)
-        var all = productoService.getProductos(true);
-        model.addAttribute("productosPopulares", all.size() > 8 ? all.subList(0, 8) : all);
-        return "index";
-    }
+    @GetMapping("/consultas/{idCategoria}")
+    public String listado(@PathVariable("idCategoria") Integer idCategoria, Model model) {
 
+        var categoriaOpt = categoriaService.getCategoria(idCategoria);
+        if (categoriaOpt.isEmpty()) {
+            //No encontro la categoria
+            model.addAttribute("productos", java.util.Collections.EMPTY_LIST);
+        } else {
+            var categoria = categoriaOpt.get();
+            model.addAttribute("productos", categoria.getProductos());
+        }
+
+        var categorias = categoriaService.getCategorias(true);
+        model.addAttribute("categorias", categorias);
+
+        return "/index";
+    }
 }

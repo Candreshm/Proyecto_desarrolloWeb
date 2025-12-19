@@ -1,10 +1,8 @@
 package com.tienda_vt;
 
 import java.util.Locale;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -13,14 +11,6 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.templatemode.TemplateMode;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 
 @Configuration
 public class ProjectConfig implements WebMvcConfigurer {
@@ -30,8 +20,8 @@ public class ProjectConfig implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("index");
         registry.addViewController("/ejemplo2").setViewName("ejemplo2");
-        registry.addViewController("/multimedia").setViewName("multimedia");
-        registry.addViewController("/iframes").setViewName("iframes");
+        registry.addViewController("/acceso_denegado").setViewName("acceso_denegado");
+        registry.addViewController("/error").setViewName("error");
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/registro/nuevo").setViewName("/registro/nuevo");
     }
@@ -47,7 +37,7 @@ public class ProjectConfig implements WebMvcConfigurer {
         resolver.setCheckExistence(true);
         return resolver;
     }
-    
+
     @Bean
     public LocaleResolver localeResolver() {
         var slr = new SessionLocaleResolver();
@@ -68,30 +58,4 @@ public class ProjectConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registro) {
         registro.addInterceptor(localeChangeInterceptor());
     }
-
-    //Bean para poder acceder a los messages.properties en código...
-    @Bean("messageSource")
-    public MessageSource messageSource() {
-        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasenames("messages");
-        messageSource.setDefaultEncoding("UTF-8");
-        return messageSource;
-    }
-
-    @Value("${firebase.json.path}")
-    private String jsonPath;
-
-    @Value("${firebase.json.file}")
-    private String jsonFile;
-
-    @Bean
-    public Storage storage() throws IOException {
-        ClassPathResource resource = new ClassPathResource(jsonPath + File.separator + jsonFile);
-        try (InputStream inputStream = resource.getInputStream()) {
-            GoogleCredentials credentials = GoogleCredentials.fromStream(inputStream);
-            return StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-        }
-    }
-
-    
 }

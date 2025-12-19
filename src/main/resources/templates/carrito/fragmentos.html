@@ -47,7 +47,10 @@
                                         <td class="text-center">[[${item.cantidad}]]</td>
                                         <td class="text-center">[[${#numbers.formatCurrency(item.precioHistorico*item.cantidad)}]]</td>
                                         <td>
-                                            <form th:action="@{/carrito/eliminar/}+${item.producto.idProducto}" method="post" class="d-inline">
+                                            <form th:action="@{/carrito/eliminar/}+${item.producto.idProducto}" 
+                                                  method="post" 
+                                                  class="d-inline"
+                                                  onsubmit="setTimeout(function(){ actualizarBadgeCarrito(); }, 1000);">
                                                 <button type="submit" class="btn btn-danger">
                                                     <i class='fas fa-trash'></i> [[#{accion.eliminar}]]
                                                 </button>

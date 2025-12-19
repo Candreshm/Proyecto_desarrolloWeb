@@ -46,11 +46,13 @@ function actualizarBadgeCarrito() {
         type: 'GET',
         success: function (cantidad) {
             var badge = $('#cartBadge');
-            if (cantidad > 0) {
-                badge.text(cantidad);
-                badge.show();
-            } else {
-                badge.hide();
+            if (badge.length > 0) {
+                if (cantidad > 0) {
+                    badge.text(cantidad);
+                    badge.show();
+                } else {
+                    badge.hide();
+                }
             }
         },
         error: function () {
@@ -71,6 +73,28 @@ function handleCartClick(event) {
 // Actualizar badge al cargar la página
 $(document).ready(function() {
     actualizarBadgeCarrito();
+    
+    // Update badge when page becomes visible (user switches back to tab)
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            actualizarBadgeCarrito();
+        }
+    });
+    
+    // Update badge after form submissions (for cart operations)
+    $(document).on('submit', 'form[action*="/carrito/"]', function() {
+        var form = this;
+        // If it's not an AJAX form, update badge after a short delay
+        // to allow the server to process the request
+        setTimeout(function() {
+            actualizarBadgeCarrito();
+        }, 500);
+    });
+    
+    // Periodically update badge (every 5 seconds) to keep it in sync
+    setInterval(function() {
+        actualizarBadgeCarrito();
+    }, 5000);
 });
 
 // funcion para hacer un preview de una imagen 

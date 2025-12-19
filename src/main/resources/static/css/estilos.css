@@ -58,15 +58,17 @@
     color: #2e7d32;
     position: relative;
     z-index: 1;
-    line-height: 1.2;
+    line-height: 1.1;
     white-space: normal;
     word-wrap: break-word;
     margin-bottom: 1rem;
+    font-size: 3.5rem; /* Slightly smaller to prevent wrapping */
 }
 
 /* Ensure "Tu salud," stays on first line and "nuestra prioridad" on second */
 .hero-title br {
     display: block;
+    line-height: 1.2;
 }
 
 .hero-subtitle {
@@ -287,24 +289,25 @@
     font-size: 2.5rem;
 }
 
-/* Different starting positions (left to right) */
-.healthcare-item.item-1 { left: 10%; animation-duration: 4s; animation-delay: 0s; }
-.healthcare-item.item-2 { left: 25%; animation-duration: 5s; animation-delay: 1s; }
-.healthcare-item.item-3 { left: 40%; animation-duration: 4.5s; animation-delay: 0.5s; }
-.healthcare-item.item-4 { left: 55%; animation-duration: 5.5s; animation-delay: 1.5s; }
-.healthcare-item.item-5 { left: 70%; animation-duration: 4s; animation-delay: 0.3s; }
-.healthcare-item.item-6 { left: 85%; animation-duration: 5s; animation-delay: 1.2s; }
-.healthcare-item.item-7 { left: 15%; animation-duration: 4.8s; animation-delay: 0.8s; }
-.healthcare-item.item-8 { left: 45%; animation-duration: 5.2s; animation-delay: 1.8s; }
-.healthcare-item.item-9 { left: 30%; animation-duration: 4.3s; animation-delay: 0.2s; }
-.healthcare-item.item-10 { left: 60%; animation-duration: 5.3s; animation-delay: 1.3s; }
-.healthcare-item.item-11 { left: 20%; animation-duration: 4.7s; animation-delay: 0.7s; }
-.healthcare-item.item-12 { left: 50%; animation-duration: 5.1s; animation-delay: 1.6s; }
-.healthcare-item.item-13 { left: 35%; animation-duration: 4.6s; animation-delay: 0.4s; }
-.healthcare-item.item-14 { left: 65%; animation-duration: 5.4s; animation-delay: 1.4s; }
-.healthcare-item.item-15 { left: 75%; animation-duration: 4.9s; animation-delay: 0.9s; }
+/* Different starting positions - now spanning from left to right edge (0% to 95%) */
+/* Slower animation durations (increased from 4-5.5s to 6-8s) */
+.healthcare-item.item-1 { left: 0%; animation-duration: 7s; animation-delay: 0s; }
+.healthcare-item.item-2 { left: 8%; animation-duration: 8s; animation-delay: 1s; }
+.healthcare-item.item-3 { left: 16%; animation-duration: 6.5s; animation-delay: 0.5s; }
+.healthcare-item.item-4 { left: 24%; animation-duration: 7.5s; animation-delay: 1.5s; }
+.healthcare-item.item-5 { left: 32%; animation-duration: 6s; animation-delay: 0.3s; }
+.healthcare-item.item-6 { left: 40%; animation-duration: 8s; animation-delay: 1.2s; }
+.healthcare-item.item-7 { left: 48%; animation-duration: 7.2s; animation-delay: 0.8s; }
+.healthcare-item.item-8 { left: 56%; animation-duration: 6.8s; animation-delay: 1.8s; }
+.healthcare-item.item-9 { left: 64%; animation-duration: 7.8s; animation-delay: 0.2s; }
+.healthcare-item.item-10 { left: 72%; animation-duration: 6.3s; animation-delay: 1.3s; }
+.healthcare-item.item-11 { left: 80%; animation-duration: 7.3s; animation-delay: 0.7s; }
+.healthcare-item.item-12 { left: 88%; animation-duration: 8.2s; animation-delay: 1.6s; }
+.healthcare-item.item-13 { left: 5%; animation-duration: 6.7s; animation-delay: 0.4s; }
+.healthcare-item.item-14 { left: 95%; animation-duration: 7.7s; animation-delay: 1.4s; }
+.healthcare-item.item-15 { left: 92%; animation-duration: 6.9s; animation-delay: 0.9s; }
 
-/* Falling animation with slight rotation */
+/* Falling animation with slight rotation - slower fall */
 @keyframes fallDown {
     0% {
         transform: translateY(-100px) rotate(0deg);

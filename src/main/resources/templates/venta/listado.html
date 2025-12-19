@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head th:replace="~{general/fragmentos :: head}">
+        <title>Sales Overview - FarmaLife</title>
+        <!-- Chart.js CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    </head>
+    <body class="d-flex flex-column min-vh-100">
+        <header th:replace="~{general/fragmentos :: header}"/>
+        
+        <main class="flex-grow-1 py-4">
+            <div class="container">
+                <!-- Page Header -->
+                <div class="card shadow-sm admin-card mb-4">
+                    <div class="card-header admin-card-header">
+                        <h2 class="mb-0">
+                            <i class="fas fa-chart-line me-2"></i>Sales Overview
+                        </h2>
+                    </div>
+                </div>
+                
+                <!-- Charts Row -->
+                <div class="row mb-4">
+                    <!-- Top Selling Products Chart -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow-sm admin-card">
+                            <div class="card-header admin-card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-star me-2"></i>Top Selling Products
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="topProductsChart" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sales by Day Chart -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow-sm admin-card">
+                            <div class="card-header admin-card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-calendar-day me-2"></i>Sales by Day
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="salesByDayChart" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sales Table -->
+                <div class="card shadow-sm admin-card">
+                    <div class="card-header admin-card-header">
+                        <h4 class="mb-0">
+                            <i class="fas fa-list me-2"></i>All Sales
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <div th:if="${ventas != null and !ventas.empty}">
+                            <div class="table-responsive">
+                                <table class="table table-hover admin-table">
+                                    <thead class="admin-table-header">
+                                        <tr>
+                                            <th>Sale ID</th>
+                                            <th>Invoice ID</th>
+                                            <th>Product</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Subtotal</th>
+                                            <th>Customer</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="venta : ${ventas}">
+                                            <td th:text="${venta.idVenta}">1</td>
+                                            <td th:text="${venta.factura.idFactura}">1</td>
+                                            <td th:text="${venta.producto.descripcion}">Product</td>
+                                            <td class="text-end" th:text="${#numbers.formatCurrency(venta.precioHistorico)}">₡0.00</td>
+                                            <td class="text-center" th:text="${venta.cantidad}">1</td>
+                                            <td class="text-end text-success fw-bold" 
+                                                th:text="${#numbers.formatCurrency(venta.precioHistorico * venta.cantidad)}">₡0.00</td>
+                                            <td th:text="${venta.factura.usuario.nombre + ' ' + venta.factura.usuario.apellidos}">Customer</td>
+                                            <td th:text="${#temporals.format(venta.fechaCreacion, 'dd-MM-yyyy HH:mm')}">Date</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="text-center p-5" th:if="${ventas == null or ventas.empty}">
+                            <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No sales found</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer th:replace="~{general/fragmentos :: footer}"/>
+        
+        <!-- Chart Scripts -->
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            
+            // Top Selling Products Chart
+            const topProductsData = /*[[${topProducts}]]*/ [];
+            const topProductsLabels = topProductsData.map(p => p.name);
+            const topProductsQuantities = topProductsData.map(p => p.quantity);
+            
+            const topProductsCtx = document.getElementById('topProductsChart').getContext('2d');
+            new Chart(topProductsCtx, {
+                type: 'bar',
+                data: {
+                    labels: topProductsLabels,
+                    datasets: [{
+                        label: 'Quantity Sold',
+                        data: topProductsQuantities,
+                        backgroundColor: 'rgba(76, 175, 80, 0.7)',
+                        borderColor: 'rgba(76, 175, 80, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        title: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Sales by Day Chart
+            const salesByDayData = /*[[${salesByDay}]]*/ [];
+            const salesByDayLabels = salesByDayData.map(s => {
+                const date = new Date(s.date);
+                return date.toLocaleDateString('es-CR', { day: '2-digit', month: '2-digit' });
+            });
+            const salesByDayCounts = salesByDayData.map(s => s.count);
+            
+            const salesByDayCtx = document.getElementById('salesByDayChart').getContext('2d');
+            new Chart(salesByDayCtx, {
+                type: 'line',
+                data: {
+                    labels: salesByDayLabels,
+                    datasets: [{
+                        label: 'Number of Sales',
+                        data: salesByDayCounts,
+                        backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                        borderColor: 'rgba(76, 175, 80, 1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        title: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+            
+            /*]]>*/
+        </script>
+    </body>
+</html>

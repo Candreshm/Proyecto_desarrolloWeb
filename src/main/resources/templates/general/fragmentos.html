@@ -93,8 +93,8 @@
                                         </form>
                                     </li>
                                 </ul>
-                            </div>
-                            
+                        </div>
+
                             <!-- Options Dropdown - Consolidated with all admin functions -->
                             <div class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -156,27 +156,34 @@
                                         <i class="fas fa-shield-alt me-2"></i>Seguridad
                                     </li>
                                     
+                                    <!-- Sales Overview -->
+                                    <li sec:authorize="hasRole('ROLE_ADMIN')">
+                                        <a class="dropdown-item" th:href="@{/venta/listado}">
+                                            <i class="fas fa-chart-line me-2 text-success"></i>Sales Overview
+                                        </a>
+                                    </li>
+                                    
                                     <!-- Users -->
                                     <li sec:authorize="hasRole('ROLE_ADMIN')">
                                         <a class="dropdown-item" th:href="@{/usuario/listado}">
                                             <i class="fas fa-users me-2 text-success"></i>[[#{plantilla.usuarios}]]
-                                        </a>
-                                    </li>
+                                </a>
+                            </li>
                                     
                                     <!-- Permissions (Usuario Rol) - This handles role management -->
                                     <li sec:authorize="hasRole('ROLE_ADMIN')">
                                         <a class="dropdown-item" th:href="@{/usuario_rol/mantenimiento}">
                                             <i class="fas fa-key me-2 text-success"></i>[[#{plantilla.permisos}]]
-                                        </a>
-                                    </li>
+                                </a>
+                            </li>
                                     
                                     <!-- Environment Constants -->
                                     <li sec:authorize="hasRole('ROLE_ADMIN')">
                                         <a class="dropdown-item" th:href="@{/constante/listado}">
                                             <i class="fas fa-sliders-h me-2 text-success"></i>[[#{plantilla.constantes}]]
                                         </a>
-                                    </li>
-                                </ul>
+                            </li>
+                        </ul>
                             </div>
                         </div>
 

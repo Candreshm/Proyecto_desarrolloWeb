@@ -7,8 +7,8 @@
     <body>
         <!-- Advanced Search Sidebar -->
         <section th:fragment="busquedaAvanzada" class="sticky-top" style="top: 20px;">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
+            <div class="card shadow-sm advanced-search-card">
+                <div class="card-header advanced-search-header">
                     <h5 class="mb-0">
                         <i class="fas fa-filter me-2"></i>Búsqueda Avanzada
                     </h5>
@@ -18,6 +18,27 @@
                         <!-- Preserve main search term -->
                         <input type="hidden" name="buscar" th:value="${buscar}">
                         
+                        <!-- Category Filter - Selectable Boxes -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-tags me-1"></i>Categorías
+                            </label>
+                            <div class="category-checkboxes">
+                                <div th:each="c : ${categorias}" class="form-check category-checkbox-item">
+                                    <input class="form-check-input category-checkbox" 
+                                           type="checkbox" 
+                                           th:id="'cat-' + ${c.idCategoria}"
+                                           th:name="categorias" 
+                                           th:value="${c.idCategoria}"
+                                           th:checked="${categoriasSeleccionadas != null and categoriasSeleccionadas.contains(c.idCategoria)}">
+                                    <label class="form-check-label category-label" 
+                                           th:for="'cat-' + ${c.idCategoria}">
+                                        <span th:text="${c.descripcion}">Categoría</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <!-- Keywords Search -->
                         <div class="mb-4">
                             <label class="form-label fw-bold">
@@ -26,7 +47,7 @@
                             <input type="text" 
                                    name="keywords" 
                                    th:value="${keywords}"
-                                   class="form-control" 
+                                   class="form-control form-control-sm" 
                                    placeholder="Ej: paracetamol, dolor, cabeza (separar con comas)">
                             <small class="form-text text-muted">Separe múltiples palabras con comas</small>
                         </div>
@@ -71,7 +92,7 @@
                             </select>
                         </div>
                         
-                        <!-- Stock Filter (Slider) -->
+                        <!-- Stock Filter -->
                         <div class="mb-4">
                             <label class="form-label fw-bold">
                                 <i class="fas fa-boxes me-1"></i>Existencias
@@ -96,15 +117,11 @@
                                            id="stockMax">
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-between small text-muted">
-                                <span id="stockMinValue">0</span>
-                                <span id="stockMaxValue">∞</span>
-                            </div>
                         </div>
                         
                         <!-- Action Buttons -->
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn advanced-search-btn">
                                 <i class="fas fa-search me-1"></i>Buscar
                             </button>
                             <a th:href="@{/consultas/listado}" class="btn btn-outline-secondary btn-sm">
@@ -116,21 +133,7 @@
             </div>
         </section>
 
-        <!-- Category Tabs -->
-        <section th:fragment="tabs" class="py-3 mb-4">
-            <div class="d-flex justify-content-center px-5">
-                <ul class="nav nav-underline">
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="/">[[#{pruebas.todas}]]</a>
-                    </li>
-                    <li th:each="c : ${categorias}" class="nav-item">
-                        <a class="nav-link" th:href="@{/consultas/{id}(id=${c.idCategoria})}">[[${c.descripcion}]]</a>
-                    </li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- Product Cards -->
+        <!-- Product Cards (removed tabs section) -->
         <section th:fragment="tarjetas" class="py-4">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
                 <div th:each="p: ${productos}" class="col">

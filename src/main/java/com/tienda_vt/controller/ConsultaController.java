@@ -39,6 +39,7 @@ public class ConsultaController {
                           @RequestParam(required = false) String ubicacion,
                           @RequestParam(required = false) Integer existenciasMin,
                           @RequestParam(required = false) Integer existenciasMax,
+                          @RequestParam(required = false) List<Integer> categorias,
                           Model model) {
         
         List<com.tienda_vt.domain.Producto> productos;
@@ -48,7 +49,8 @@ public class ConsultaController {
                                      (ubicacion != null && !ubicacion.trim().isEmpty()) ||
                                      (existenciasMin != null) ||
                                      (existenciasMax != null) ||
-                                     (keywords != null && !keywords.trim().isEmpty());
+                                     (keywords != null && !keywords.trim().isEmpty()) ||
+                                     (categorias != null && !categorias.isEmpty());
         
         if (hasAdvancedFilters || (buscar != null && !buscar.trim().isEmpty())) {
             // Use advanced search
@@ -67,6 +69,17 @@ public class ConsultaController {
                 // Intersection with existing results
                 productos.retainAll(keywordResults);
             }
+            
+            // Filter by selected categories if any
+            if (categorias != null && !categorias.isEmpty()) {
+                List<com.tienda_vt.domain.Producto> categoryFiltered = new java.util.ArrayList<>();
+                for (Integer categoriaId : categorias) {
+                    List<com.tienda_vt.domain.Producto> catProducts = productoService.getProductosByCategoria(categoriaId, false);
+                    categoryFiltered.addAll(catProducts);
+                }
+                // Intersection: keep only products that match selected categories
+                productos.retainAll(categoryFiltered);
+            }
         } else {
             // No filters, show all products
             productos = productoService.getProductos(false);
@@ -80,10 +93,11 @@ public class ConsultaController {
         model.addAttribute("ubicacion", ubicacion);
         model.addAttribute("existenciasMin", existenciasMin);
         model.addAttribute("existenciasMax", existenciasMax);
+        model.addAttribute("categoriasSeleccionadas", categorias != null ? categorias : new java.util.ArrayList<>());
         
-        // Add categories for tabs
-        var categorias = categoriaService.getCategorias(true);
-        model.addAttribute("categorias", categorias);
+        // Add categories for selection boxes
+        var categoriasList = categoriaService.getCategorias(true);
+        model.addAttribute("categorias", categoriasList);
         
         return "/consultas/listado";
     }

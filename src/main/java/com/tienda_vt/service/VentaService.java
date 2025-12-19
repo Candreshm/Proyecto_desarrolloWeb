@@ -4,6 +4,7 @@ import com.tienda_vt.domain.Venta;
 import com.tienda_vt.repository.VentaRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class VentaService {
     
     private final VentaRepository ventaRepository;
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     
     public VentaService(VentaRepository ventaRepository) {
         this.ventaRepository = ventaRepository;
@@ -32,9 +34,9 @@ public class VentaService {
         
         for (Object[] row : results) {
             Map<String, Object> product = new HashMap<>();
-            product.put("name", row[0]); // productName
-            product.put("quantity", ((Number) row[1]).longValue()); // totalQuantity
-            product.put("revenue", row[2]); // totalRevenue
+            product.put("name", row[0] != null ? row[0].toString() : ""); // productName
+            product.put("quantity", row[1] != null ? ((Number) row[1]).longValue() : 0L); // totalQuantity
+            product.put("revenue", row[2] != null ? ((Number) row[2]).doubleValue() : 0.0); // totalRevenue
             products.add(product);
         }
         
@@ -48,9 +50,21 @@ public class VentaService {
         
         for (Object[] row : results) {
             Map<String, Object> daySale = new HashMap<>();
-            daySale.put("date", row[0]); // saleDate (LocalDate)
-            daySale.put("count", ((Number) row[1]).longValue()); // saleCount
-            daySale.put("revenue", row[2]); // totalRevenue
+            
+            // Handle date conversion - could be LocalDate, java.sql.Date, or String
+            Object dateObj = row[0];
+            String dateStr = "";
+            if (dateObj instanceof LocalDate) {
+                dateStr = ((LocalDate) dateObj).format(DATE_FORMATTER);
+            } else if (dateObj instanceof java.sql.Date) {
+                dateStr = ((java.sql.Date) dateObj).toLocalDate().format(DATE_FORMATTER);
+            } else if (dateObj != null) {
+                dateStr = dateObj.toString();
+            }
+            
+            daySale.put("date", dateStr);
+            daySale.put("count", row[1] != null ? ((Number) row[1]).longValue() : 0L); // saleCount
+            daySale.put("revenue", row[2] != null ? ((Number) row[2]).doubleValue() : 0.0); // totalRevenue
             salesByDay.add(daySale);
         }
         

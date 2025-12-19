@@ -103,18 +103,18 @@
         <footer th:replace="~{general/fragmentos :: footer}"/>
         
         <!-- Data Storage for Charts -->
-        <div th:if="${topProducts != null and !topProducts.empty}" style="display: none;">
-            <div th:each="product, iterStat : ${topProducts}" 
+        <div th:if="${topProducts != null and !topProducts.empty}" style="display: none;" id="topProductsData">
+            <div th:each="product : ${topProducts}" 
                  th:data-product-name="${product.name}"
                  th:data-product-quantity="${product.quantity}"
-                 class="product-data"></div>
+                 class="product-data-item"></div>
         </div>
         
-        <div th:if="${salesByDay != null and !salesByDay.empty}" style="display: none;">
-            <div th:each="sale, iterStat : ${salesByDay}" 
+        <div th:if="${salesByDay != null and !salesByDay.empty}" style="display: none;" id="salesByDayData">
+            <div th:each="sale : ${salesByDay}" 
                  th:data-sale-date="${sale.date}"
                  th:data-sale-count="${sale.count}"
-                 class="sale-day-data"></div>
+                 class="sale-day-data-item"></div>
         </div>
         
         <!-- Chart Scripts -->
@@ -125,124 +125,129 @@
                 var salesByDayData = [];
                 
                 // Get top products data
-                var productDivs = document.querySelectorAll('.product-data');
+                var productDivs = document.querySelectorAll('.product-data-item');
                 productDivs.forEach(function(div) {
-                    topProductsData.push({
-                        name: div.getAttribute('data-product-name'),
-                        quantity: parseInt(div.getAttribute('data-product-quantity')) || 0
-                    });
+                    var name = div.getAttribute('data-product-name');
+                    var quantity = parseInt(div.getAttribute('data-product-quantity')) || 0;
+                    if (name) {
+                        topProductsData.push({
+                            name: name,
+                            quantity: quantity
+                        });
+                    }
                 });
                 
                 // Get sales by day data
-                var saleDayDivs = document.querySelectorAll('.sale-day-data');
+                var saleDayDivs = document.querySelectorAll('.sale-day-data-item');
                 saleDayDivs.forEach(function(div) {
-                    salesByDayData.push({
-                        date: div.getAttribute('data-sale-date'),
-                        count: parseInt(div.getAttribute('data-sale-count')) || 0
-                    });
+                    var date = div.getAttribute('data-sale-date');
+                    var count = parseInt(div.getAttribute('data-sale-count')) || 0;
+                    if (date) {
+                        salesByDayData.push({
+                            date: date,
+                            count: count
+                        });
+                    }
                 });
                 
                 console.log('Top Products Data:', topProductsData);
                 console.log('Sales By Day Data:', salesByDayData);
                 
                 // Top Selling Products Chart
-                if (topProductsData.length > 0) {
+                var topProductsCtx = document.getElementById('topProductsChart');
+                if (topProductsData.length > 0 && topProductsCtx) {
                     const topProductsLabels = topProductsData.map(p => p.name);
                     const topProductsQuantities = topProductsData.map(p => p.quantity);
                     
-                    const topProductsCtx = document.getElementById('topProductsChart');
-                    if (topProductsCtx) {
-                        new Chart(topProductsCtx.getContext('2d'), {
-                            type: 'bar',
-                            data: {
-                                labels: topProductsLabels,
-                                datasets: [{
-                                    label: 'Quantity Sold',
-                                    data: topProductsQuantities,
-                                    backgroundColor: 'rgba(76, 175, 80, 0.7)',
-                                    borderColor: 'rgba(76, 175, 80, 1)',
-                                    borderWidth: 2
-                                }]
+                    new Chart(topProductsCtx.getContext('2d'), {
+                        type: 'bar',
+                        data: {
+                            labels: topProductsLabels,
+                            datasets: [{
+                                label: 'Quantity Sold',
+                                data: topProductsQuantities,
+                                backgroundColor: 'rgba(76, 175, 80, 0.7)',
+                                borderColor: 'rgba(76, 175, 80, 1)',
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'top'
+                                }
                             },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: true,
-                                plugins: {
-                                    legend: {
-                                        display: true,
-                                        position: 'top'
-                                    }
-                                },
-                                scales: {
-                                    y: {
-                                        beginAtZero: true,
-                                        ticks: {
-                                            stepSize: 1
-                                        }
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 1
                                     }
                                 }
                             }
-                        });
-                    }
-                } else {
-                    document.getElementById('topProductsChart').parentElement.innerHTML = 
-                        '<p class="text-center text-muted p-4">No data available</p>';
+                        }
+                    });
+                } else if (topProductsCtx) {
+                    topProductsCtx.parentElement.innerHTML = 
+                        '<p class="text-center text-muted p-4"><i class="fas fa-info-circle me-2"></i>No sales data available</p>';
                 }
                 
                 // Sales by Day Chart
-                if (salesByDayData.length > 0) {
+                var salesByDayCtx = document.getElementById('salesByDayChart');
+                if (salesByDayData.length > 0 && salesByDayCtx) {
                     const salesByDayLabels = salesByDayData.map(s => {
-                        var dateStr = s.date;
-                        if (dateStr) {
-                            var parts = dateStr.split('-');
+                        if (s.date) {
+                            // Parse date string (YYYY-MM-DD format)
+                            var parts = s.date.split('-');
                             if (parts.length === 3) {
                                 var date = new Date(parts[0], parts[1] - 1, parts[2]);
                                 return date.toLocaleDateString('es-CR', { day: '2-digit', month: '2-digit' });
                             }
+                            return s.date;
                         }
-                        return dateStr;
+                        return '';
                     });
                     const salesByDayCounts = salesByDayData.map(s => s.count);
                     
-                    const salesByDayCtx = document.getElementById('salesByDayChart');
-                    if (salesByDayCtx) {
-                        new Chart(salesByDayCtx.getContext('2d'), {
-                            type: 'line',
-                            data: {
-                                labels: salesByDayLabels,
-                                datasets: [{
-                                    label: 'Number of Sales',
-                                    data: salesByDayCounts,
-                                    backgroundColor: 'rgba(76, 175, 80, 0.2)',
-                                    borderColor: 'rgba(76, 175, 80, 1)',
-                                    borderWidth: 3,
-                                    fill: true,
-                                    tension: 0.4
-                                }]
+                    new Chart(salesByDayCtx.getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: salesByDayLabels,
+                            datasets: [{
+                                label: 'Number of Sales',
+                                data: salesByDayCounts,
+                                backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                                borderColor: 'rgba(76, 175, 80, 1)',
+                                borderWidth: 3,
+                                fill: true,
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'top'
+                                }
                             },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: true,
-                                plugins: {
-                                    legend: {
-                                        display: true,
-                                        position: 'top'
-                                    }
-                                },
-                                scales: {
-                                    y: {
-                                        beginAtZero: true,
-                                        ticks: {
-                                            stepSize: 1
-                                        }
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 1
                                     }
                                 }
                             }
-                        });
-                    }
-                } else {
-                    document.getElementById('salesByDayChart').parentElement.innerHTML = 
-                        '<p class="text-center text-muted p-4">No data available</p>';
+                        }
+                    });
+                } else if (salesByDayCtx) {
+                    salesByDayCtx.parentElement.innerHTML = 
+                        '<p class="text-center text-muted p-4"><i class="fas fa-info-circle me-2"></i>No sales data available</p>';
                 }
             });
         </script>

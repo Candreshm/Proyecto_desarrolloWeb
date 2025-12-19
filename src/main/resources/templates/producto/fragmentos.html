@@ -108,6 +108,21 @@
                                         <span th:unless="${p.activo}" 
                                               class="badge bg-secondary">Inactivo</span>
                                     </div>
+                                    
+                                    <!-- Cart Button - Visible to all users -->
+                                    <div class="mt-auto mb-2 d-flex justify-content-center">
+                                        <form th:action="@{/carrito/agregar}" method="post" class="d-inline">
+                                            <input type="hidden" th:value="${p.idProducto}" name="idProducto">
+                                            <button type="button" 
+                                                    class="btn btn-primary btn-sm"
+                                                    th:disabled="${p.existencias == 0 or !p.activo}"
+                                                    onclick="addCart(this.form)">
+                                                <i class="fas fa-cart-plus"></i> Agregar al carrito
+                                            </button>
+                                        </form>
+                                    </div>
+                                    
+                                    <!-- Admin Action Buttons - Only visible on hover for admins -->
                                     <div class="mt-auto d-flex justify-content-center gap-2 product-action-buttons" 
                                          sec:authorize="hasRole('ROLE_ADMIN')"
                                          onclick="event.stopPropagation();">

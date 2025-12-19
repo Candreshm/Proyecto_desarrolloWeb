@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import com.tienda_vt.service.FirebaseStorageService;
 import java.math.BigDecimal;
+import java.util.ArrayList;
         
 /**
  *
@@ -59,6 +60,53 @@ public class ProductoService {
             return productoRepository.findByPrecioBetweenOrderByPrecioAsc(precioInf, precioSup);
         }
         return productoRepository.buscarProductosPorPrecio(buscar.trim(), precioInf, precioSup);
+    }
+    
+    // Advanced search method
+    @Transactional(readOnly=true)
+    public List<Producto> busquedaAvanzada(String buscar, 
+                                           BigDecimal precioInf, 
+                                           BigDecimal precioSup,
+                                           String ubicacion,
+                                           Integer existenciasMin,
+                                           Integer existenciasMax) {
+        // Normalize empty strings to null
+        String buscarNormalized = (buscar != null && !buscar.trim().isEmpty()) ? buscar.trim() : null;
+        String ubicacionNormalized = (ubicacion != null && !ubicacion.trim().isEmpty()) ? ubicacion.trim() : null;
+        
+        return productoRepository.busquedaAvanzada(
+            buscarNormalized,
+            precioInf,
+            precioSup,
+            ubicacionNormalized,
+            existenciasMin,
+            existenciasMax
+        );
+    }
+    
+    // Search with multiple keywords (comma or space separated)
+    @Transactional(readOnly=true)
+    public List<Producto> buscarPorKeywords(String keywords) {
+        if (keywords == null || keywords.trim().isEmpty()) {
+            return getProductos(false);
+        }
+        // Split by comma or space and search for each keyword
+        String[] keywordArray = keywords.split("[,\\s]+");
+        List<Producto> resultados = new ArrayList<>();
+        
+        for (String keyword : keywordArray) {
+            if (!keyword.trim().isEmpty()) {
+                List<Producto> productos = productoRepository.buscarProductos(keyword.trim());
+                if (resultados.isEmpty()) {
+                    resultados = productos;
+                } else {
+                    // Intersection: keep only products that match all keywords
+                    resultados.retainAll(productos);
+                }
+            }
+        }
+        
+        return resultados;
     }
     
     @Transactional(readOnly=true)

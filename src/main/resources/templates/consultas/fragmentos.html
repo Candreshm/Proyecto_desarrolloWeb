@@ -2,10 +2,121 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-    <head th:replace="~{general/plantilla :: head}"/>
+    <head th:replace="~{general/fragmentos :: head}"/>
 
     <body>
-        <!-- fragmento 1 para mostrar en tabs las categorias -->
+        <!-- Advanced Search Sidebar -->
+        <section th:fragment="busquedaAvanzada" class="sticky-top" style="top: 20px;">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-filter me-2"></i>Búsqueda Avanzada
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="get" th:action="@{/consultas/listado}" id="advancedSearchForm">
+                        <!-- Preserve main search term -->
+                        <input type="hidden" name="buscar" th:value="${buscar}">
+                        
+                        <!-- Keywords Search -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-key me-1"></i>Palabras Clave
+                            </label>
+                            <input type="text" 
+                                   name="keywords" 
+                                   th:value="${keywords}"
+                                   class="form-control" 
+                                   placeholder="Ej: paracetamol, dolor, cabeza (separar con comas)">
+                            <small class="form-text text-muted">Separe múltiples palabras con comas</small>
+                        </div>
+                        
+                        <!-- Price Filter -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-dollar-sign me-1"></i>Rango de Precio
+                            </label>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <input type="number" 
+                                           name="precioInf" 
+                                           th:value="${precioInf}" 
+                                           class="form-control form-control-sm" 
+                                           min="0" 
+                                           step="0.01"
+                                           placeholder="Mínimo">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" 
+                                           name="precioSup" 
+                                           th:value="${precioSup}" 
+                                           class="form-control form-control-sm" 
+                                           min="0" 
+                                           step="0.01"
+                                           placeholder="Máximo">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Location Filter -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-map-marker-alt me-1"></i>Ubicación
+                            </label>
+                            <select name="ubicacion" class="form-select form-select-sm">
+                                <option value="">Todas las ubicaciones</option>
+                                <option value="San Jose" th:selected="${ubicacion == 'San Jose'}">San José</option>
+                                <option value="Heredia" th:selected="${ubicacion == 'Heredia'}">Heredia</option>
+                                <option value="Alajuela" th:selected="${ubicacion == 'Alajuela'}">Alajuela</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Stock Filter (Slider) -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-boxes me-1"></i>Existencias
+                            </label>
+                            <div class="row g-2 mb-2">
+                                <div class="col-6">
+                                    <input type="number" 
+                                           name="existenciasMin" 
+                                           th:value="${existenciasMin}" 
+                                           class="form-control form-control-sm" 
+                                           min="0"
+                                           placeholder="Mínimo"
+                                           id="stockMin">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" 
+                                           name="existenciasMax" 
+                                           th:value="${existenciasMax}" 
+                                           class="form-control form-control-sm" 
+                                           min="0"
+                                           placeholder="Máximo"
+                                           id="stockMax">
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between small text-muted">
+                                <span id="stockMinValue">0</span>
+                                <span id="stockMaxValue">∞</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search me-1"></i>Buscar
+                            </button>
+                            <a th:href="@{/consultas/listado}" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-redo me-1"></i>Limpiar Filtros
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Category Tabs -->
         <section th:fragment="tabs" class="py-3 mb-4">
             <div class="d-flex justify-content-center px-5">
                 <ul class="nav nav-underline">
@@ -19,8 +130,8 @@
             </div>
         </section>
 
-        <!-- fragmento 2 para mostrar en tarjetas los productos -->
-        <section th:fragment="tarjetas" class="container py-4">
+        <!-- Product Cards -->
+        <section th:fragment="tarjetas" class="py-4">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
                 <div th:each="p: ${productos}" class="col">
                     <div class="card h-100 shadow">
@@ -36,6 +147,10 @@
                         <div class="card-body d-flex flex-column">
                             <p class="card-text text-muted mb-auto text-truncate"
                                th:text="${p.detalle}">Detalle</p>
+                            <small class="text-muted mt-2" th:if="${p.ubicacion}">
+                                <i class="fas fa-map-marker-alt me-1"></i>
+                                <span th:text="${p.ubicacion}">Ubicación</span>
+                            </small>
                         </div>
                         <div class="card-footer bg-white d-flex justify-content-between align-items-center">
                             <div class="fw-bold">
@@ -55,76 +170,12 @@
                     </div>
                 </div>
             </div>
-        </section>
-
-        <section th:fragment="consultas" class="row p-2">
-            <div class="col-md-12 mb-4">
-                <div class="card">
-                    <div class="card-header bg-primary text-white text-center">
-                        <h5>[[#{pruebas.filtrar.precio}]]</h5>
-                    </div>
-                    <div class="card-body">
-                        <form method="get" th:action="@{/consultas/listado}" class="was-validated">
-                            <!-- Preserve search term if exists -->
-                            <input type="hidden" name="buscar" th:value="${buscar}">
-                            
-                            <div class="row">
-                                <div class="col-md-5 mb-3">
-                                    <label>[[#{pruebas.precio.inferior}]]</label>
-                                    <input type="number" 
-                                           name="precioInf" 
-                                           th:value="${precioInf}" 
-                                           class="form-control" 
-                                           min="0" 
-                                           step="0.01"
-                                           required/>
-                                </div>
-                                <div class="col-md-5 mb-3">
-                                    <label>[[#{pruebas.precio.superior}]]</label>
-                                    <input type="number" 
-                                           name="precioSup" 
-                                           th:value="${precioSup}" 
-                                           class="form-control" 
-                                           min="0" 
-                                           step="0.01"
-                                           required/>
-                                </div>
-                                <div class="col-md-2 mb-3 d-flex align-items-end">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa-solid fa-magnifying-glass"></i> [[#{pruebas.filtrar}]]
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+            <!-- Empty state -->
+            <div th:if="${productos == null or productos.empty}" class="text-center py-5">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <p class="text-muted">No se encontraron productos con los filtros aplicados.</p>
             </div>
         </section>
-
-        <div th:fragment="formConsulta(colorForm, textoForm, urlForm)">
-            <form method="post" th:action="@{${urlForm}}" class="was-validated">
-                <div class='card p-2'>
-                    <div class='card-header text-center text-white' th:classappend="${'bg-'+colorForm}">
-                        <h5>[[${textoForm}]]</h5>
-                    </div>
-                    <div class='card-body'>
-                        <div class='mb-3'>
-                            <label>[[#{pruebas.precio.inferior}]]</label>
-                            <input type="number" name="precioInf" th:value='${precioInf}' class='form-control' min='0' required/>
-                        </div>
-                        <div class='mb-3'>
-                            <label>[[#{pruebas.precio.superior}]]</label>
-                            <input type="number" name="precioSup" th:value='${precioSup}' class='form-control' min='0' required/>
-                        </div>
-                    </div>
-                    <div class='card-footer text-center'>
-                        <button type='submit' class='btn text-white' th:classappend="${'btn-'+colorForm}">
-                            <i class='fa-solid fa-magnifying-glass'></i>[[${textoForm}]]
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>     
 
     </body>
 </html>

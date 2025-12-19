@@ -6,6 +6,9 @@
     min-height: 400px;
     display: flex;
     align-items: center;
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+    margin-bottom: 1.5rem !important;
 }
 
 .hero-background {
@@ -207,6 +210,9 @@
 /* Category Section */
 .category-section {
     background-color: transparent; /* Remove gray background */
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+    margin-bottom: 1.5rem !important;
 }
 
 .category-section .section-background {
@@ -216,6 +222,9 @@
 /* Products Section */
 .products-section {
     background-color: transparent; /* Remove gray background */
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+    margin-bottom: 1.5rem !important;
 }
 
 .products-section .section-background {

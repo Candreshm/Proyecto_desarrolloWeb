@@ -163,24 +163,10 @@
                                         </a>
                                     </li>
                                     
-                                    <!-- Roles -->
-                                    <li sec:authorize="hasRole('ROLE_ADMIN')">
-                                        <a class="dropdown-item" th:href="@{/role/listado}">
-                                            <i class="fas fa-user-shield me-2 text-success"></i>[[#{plantilla.troles}]]
-                                        </a>
-                                    </li>
-                                    
-                                    <!-- Permissions (Usuario Rol) -->
+                                    <!-- Permissions (Usuario Rol) - This handles role management -->
                                     <li sec:authorize="hasRole('ROLE_ADMIN')">
                                         <a class="dropdown-item" th:href="@{/usuario_rol/mantenimiento}">
                                             <i class="fas fa-key me-2 text-success"></i>[[#{plantilla.permisos}]]
-                                        </a>
-                                    </li>
-                                    
-                                    <!-- Routes (Rutas) -->
-                                    <li sec:authorize="hasRole('ROLE_ADMIN')">
-                                        <a class="dropdown-item" th:href="@{/ruta/listado}">
-                                            <i class="fas fa-route me-2 text-success"></i>[[#{plantilla.rutas}]]
                                         </a>
                                     </li>
                                     

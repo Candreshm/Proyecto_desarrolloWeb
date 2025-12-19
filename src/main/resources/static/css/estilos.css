@@ -454,6 +454,7 @@
 .category-management-card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border-top: 4px solid #4caf50 !important;
+    position: relative;
 }
 
 .category-management-card:hover {
@@ -467,4 +468,43 @@
 
 .category-management-card .card-body {
     min-height: 150px;
+}
+
+/* Category Action Buttons - Hidden by default, shown on hover */
+.category-action-buttons {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.category-management-card:hover .category-action-buttons {
+    opacity: 1;
+}
+
+/* Icon-only buttons styling */
+.category-btn-update,
+.category-btn-delete {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.category-btn-update:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.category-btn-delete:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.category-btn-update i,
+.category-btn-delete i {
+    font-size: 1rem;
+    margin: 0;
 }

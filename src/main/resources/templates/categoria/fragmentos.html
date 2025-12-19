@@ -81,18 +81,21 @@
                                         <span th:unless="${c.activo}" 
                                               class="badge bg-secondary">Inactiva</span>
                                     </div>
-                                    <div class="mt-auto d-grid gap-2" sec:authorize="hasRole('ROLE_ADMIN')">
+                                    <div class="mt-auto d-flex justify-content-center gap-2 category-action-buttons" 
+                                         sec:authorize="hasRole('ROLE_ADMIN')">
                                         <a th:href="@{/categoria/modificar/{id}(id=${c.idCategoria})}" 
-                                           class="btn btn-warning btn-sm">
-                                            <i class="fas fa-pencil-alt me-1"></i> [[#{accion.actualizar}]]
+                                           class="btn btn-warning category-btn-update"
+                                           title="[[#{accion.actualizar}]]">
+                                            <i class="fas fa-pencil-alt"></i>
                                         </a>
                                         <button type="button" 
-                                                class="btn btn-danger btn-sm"
+                                                class="btn btn-danger category-btn-delete"
                                                 data-bs-toggle="modal" 
                                                 data-bs-target="#confirmModal"
                                                 th:data-bs-id="${c.idCategoria}"
-                                                th:data-bs-descripcion="${c.descripcion}">
-                                            <i class="fa-solid fa-trash me-1"></i> [[#{accion.eliminar}]]
+                                                th:data-bs-descripcion="${c.descripcion}"
+                                                title="[[#{accion.eliminar}]]">
+                                            <i class="fa-solid fa-trash"></i>
                                         </button>
                                     </div>
                                 </div>

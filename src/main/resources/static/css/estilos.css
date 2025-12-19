@@ -242,3 +242,108 @@
         transform: translateY(-10px);
     }
 }
+
+/* Healthcare Items Waterfall Animation */
+.healthcare-waterfall {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.healthcare-item {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 2rem;
+    animation: fallDown linear infinite;
+    z-index: 1;
+}
+
+/* Different sizes for variety */
+.healthcare-item.item-1,
+.healthcare-item.item-4,
+.healthcare-item.item-7,
+.healthcare-item.item-10,
+.healthcare-item.item-13 {
+    font-size: 1.5rem;
+}
+
+.healthcare-item.item-2,
+.healthcare-item.item-5,
+.healthcare-item.item-8,
+.healthcare-item.item-11,
+.healthcare-item.item-15 {
+    font-size: 2rem;
+}
+
+.healthcare-item.item-3,
+.healthcare-item.item-6,
+.healthcare-item.item-9,
+.healthcare-item.item-12,
+.healthcare-item.item-14 {
+    font-size: 2.5rem;
+}
+
+/* Different starting positions (left to right) */
+.healthcare-item.item-1 { left: 10%; animation-duration: 4s; animation-delay: 0s; }
+.healthcare-item.item-2 { left: 25%; animation-duration: 5s; animation-delay: 1s; }
+.healthcare-item.item-3 { left: 40%; animation-duration: 4.5s; animation-delay: 0.5s; }
+.healthcare-item.item-4 { left: 55%; animation-duration: 5.5s; animation-delay: 1.5s; }
+.healthcare-item.item-5 { left: 70%; animation-duration: 4s; animation-delay: 0.3s; }
+.healthcare-item.item-6 { left: 85%; animation-duration: 5s; animation-delay: 1.2s; }
+.healthcare-item.item-7 { left: 15%; animation-duration: 4.8s; animation-delay: 0.8s; }
+.healthcare-item.item-8 { left: 45%; animation-duration: 5.2s; animation-delay: 1.8s; }
+.healthcare-item.item-9 { left: 30%; animation-duration: 4.3s; animation-delay: 0.2s; }
+.healthcare-item.item-10 { left: 60%; animation-duration: 5.3s; animation-delay: 1.3s; }
+.healthcare-item.item-11 { left: 20%; animation-duration: 4.7s; animation-delay: 0.7s; }
+.healthcare-item.item-12 { left: 50%; animation-duration: 5.1s; animation-delay: 1.6s; }
+.healthcare-item.item-13 { left: 35%; animation-duration: 4.6s; animation-delay: 0.4s; }
+.healthcare-item.item-14 { left: 65%; animation-duration: 5.4s; animation-delay: 1.4s; }
+.healthcare-item.item-15 { left: 75%; animation-duration: 4.9s; animation-delay: 0.9s; }
+
+/* Falling animation with slight rotation */
+@keyframes fallDown {
+    0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.7;
+    }
+    90% {
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(500px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Add subtle rotation variation for some items */
+.healthcare-item.item-2,
+.healthcare-item.item-5,
+.healthcare-item.item-8,
+.healthcare-item.item-11,
+.healthcare-item.item-14 {
+    animation-name: fallDownRotate;
+}
+
+@keyframes fallDownRotate {
+    0% {
+        transform: translateY(-100px) rotate(-180deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.7;
+    }
+    90% {
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(500px) rotate(180deg);
+        opacity: 0;
+    }
+}

@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<!-- Esta es la página principal del sitio web TechShop -->
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     <head th:replace="~{general/fragmentos :: head}"/>
-
-    <body>
+    <body class="d-flex flex-column min-vh-100">
         <header th:replace="~{general/fragmentos :: header}"/>
 
-        <section th:replace="~{registro/fragmentos :: nuevoUsuario}"/>
+        <main class="flex-grow-1 d-flex align-items-center justify-content-center py-5">
+            <section th:replace="~{registro/fragmentos :: nuevoUsuario}"/>
+        </main>
 
         <footer th:replace="~{general/fragmentos :: footer}"/>
     </body>

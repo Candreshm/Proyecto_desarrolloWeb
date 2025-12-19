@@ -3,8 +3,9 @@
       xmlns:th="http://www.thymeleaf.org"      
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     <head th:fragment="head">
-        <title>TechShop</title>
+        <title>FarmaLife</title>
         <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
         <link th:href="@{/webjars/font-awesome/css/all.css}" rel="stylesheet"/>
         <script th:src="@{/js/rutinas.js}"></script>
@@ -17,13 +18,24 @@
     </head>
     <body>
         <header th:fragment="header" class="header d-print-none">
-            <nav class="navbar navbar-expand-sm p-0">
+            <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
                 <div class="container">                    
-                    <a th:href="@{/}" class="navbar-brand">[[#{aplicacion.titulo}]]</a>
-                    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <a th:href="@{/}" class="navbar-brand d-flex align-items-center">
+                        <i class="fas fa-plus-circle text-success fs-4 me-2"></i>
+                        <span class="fw-bold text-dark">[[#{aplicacion.titulo}]]</span>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                    <div class="collapse navbar-collapse" id="navbarCollapse">
+                        <!-- Search Bar -->
+                        <form class="d-flex mx-auto my-2 my-lg-0" style="max-width: 500px; width: 100%;" th:action="@{/consultas/listado}" method="get">
+                            <input class="form-control me-2" type="search" name="buscar" placeholder="Buscar productos o medicamentos" aria-label="Buscar">
+                            <button class="btn btn-outline-success" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </form>
+                        <div class="d-flex align-items-center ms-auto">
                         <ul class="navbar-nav" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_VENDEDOR')">
                             <li class="nav-item px-2"><a class="nav-link" th:href="@{/categoria/listado}">[[#{plantilla.categorias}]]</a></li>
                             <li class="nav-item px-2"><a class="nav-link" th:href="@{/producto/listado}">[[#{plantilla.productos}]]</a></li>
@@ -48,64 +60,72 @@
                                 </ul>
                             </li>
                         </ul>
-                        <ul class="navbar-nav">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                                    [[#{plantilla.idioma}]]</a>
-                                <ul class="dropdown-menu">
+                            <!-- User Icon -->
+                            <div class="nav-item dropdown me-3">
+                                <a class="nav-link" th:href="@{/login}" sec:authorize="!isAuthenticated()" role="button">
+                                    <i class="fas fa-user-circle fa-lg text-dark"></i>
+                                </a>
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" sec:authorize="isAuthenticated()">
+                                    <img th:src="@{${session.imagenUsuario}}" 
+                                         alt="User" height="32" width="32" class="rounded-circle me-1"
+                                         onerror="this.src='https://via.placeholder.com/32'"/>
+                                    <span sec:authentication="name" class="d-none d-md-inline">User</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" sec:authorize="isAuthenticated()">
+                                    <li><a class="dropdown-item" th:href="@{/usuario/listado}">Mi Perfil</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form method="post" th:action="@{/logout}">
+                                            <button class="dropdown-item" type="submit">
+                                                <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Options Dropdown -->
+                            <div class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-cog fa-lg text-dark me-1"></i>
+                                    <span class="d-none d-md-inline">Opciones</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li class="dropdown-header">Idioma</li>
                                     <li><a class="dropdown-item" th:href="@{/(lang=es)}">Español</a></li>
                                     <li><a class="dropdown-item" th:href="@{/(lang=en)}">English</a></li>
                                     <li><a class="dropdown-item" th:href="@{/(lang=fr)}">Française</a></li>
                                     <li><a class="dropdown-item" th:href="@{/(lang=pt)}">Portugaise</a></li>
+                                    <li sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_VENDEDOR')"><hr class="dropdown-divider"></li>
+                                    <li sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_VENDEDOR')" class="dropdown-header">Administración</li>
+                                    <li sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_VENDEDOR')">
+                                        <a class="dropdown-item" th:href="@{/categoria/listado}">
+                                            <i class="fas fa-tags me-2"></i>[[#{plantilla.categorias}]]
+                                        </a>
+                                    </li>
+                                    <li sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_VENDEDOR')">
+                                        <a class="dropdown-item" th:href="@{/producto/listado}">
+                                            <i class="fas fa-box me-2"></i>[[#{plantilla.productos}]]
+                                        </a>
+                                    </li>
+                                    <li sec:authorize="hasRole('ROLE_ADMIN')">
+                                        <a class="dropdown-item" th:href="@{/usuario/listado}">
+                                            <i class="fas fa-users me-2"></i>[[#{plantilla.usuarios}]]
+                                        </a>
+                                    </li>
                                 </ul>
-                            </li>
-                        </ul>
-                        <div id="resultBlock">
+                            </div>
                         </div>
-
-                        <ul class='navbar-bar' sec:authorize='!isAuthenticated()'>
-                            <li class="nav-item my-auto"> 
-                                <a class="nav-link" th:href="@{/login}">
-                                    <i class="fas fa-sign-in-alt"></i>
-                                    <span class="ms-1">Login</span>
-                                </a>
-                            </li>
-                        </ul>
-
-                        <ul class='navbar-bar' sec:authorize='isAuthenticated()'>
-                            <li class="nav-item my-auto"> 
-                                <a class="nav-link">
-                                    <img th:src="@{${session.imagenUsuario}}"
-                                         alt="..." height="40" class="rounded-circle"/>
-                                    <span sec:authentication="name" class="ms-1">User</span>
-                                </a>
-                            </li>
-                            <li class="nav-item my-auto"> 
-                                <form method="post" th:action="@{/logout}">
-                                    <button class="btn nav-link" type="submit">
-                                        <i class="fas fa-sign-out-alt"></i>
-                                        <span class="ms-1">Logout</span>
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
 
                     </div>
                 </div>
             </nav>
-            <section id="main-header" class="py-2 bg-success text-white">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h1><i class="fas fa-cog"></i> [[#{plantilla.suTienda}]]</h1>
-                        </div>
-                    </div>
-                </div>
-            </section>
         </header>
 
-        <footer th:fragment="footer" class="p-2 mt-5 bg-info text-white d-print-none">
-            <p class="lead text-center">[[#{plantilla.derechos}]] &COPY;</p>
+        <footer th:fragment="footer" class="py-4 mt-5 bg-light border-top d-print-none">
+            <div class="container">
+                <p class="text-center text-muted mb-0">[[#{plantilla.derechos}]] &COPY;</p>
+            </div>
         </footer>
 
         <section th:fragment="mostrarToast">

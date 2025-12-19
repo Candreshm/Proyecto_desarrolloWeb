@@ -1,17 +1,128 @@
 <!DOCTYPE html>
-<!-- Esto es un comentario...  -->
-<html xmlns="http://www.3w.org/1999/xhtml"
-           xmlns:th="http://www.thymeleaf.org"
-           xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
-    >
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     <head th:replace="~{general/fragmentos :: head}"/>
-
     <body>
         <header th:replace="~{general/fragmentos :: header}"/>
         
+        <!-- Hero Section -->
+        <section class="hero-section py-5 mb-5">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <div class="hero-content p-4 rounded-4">
+                            <h1 class="display-4 fw-bold text-dark mb-3">
+                                Tu salud, nuestra prioridad
+                            </h1>
+                            <p class="lead text-muted mb-4">
+                                Medicamentos, vitaminas y cuidado personal a un clic de distancia.
+                            </p>
+                            <a th:href="@{/consultas/listado}" class="btn btn-primary btn-lg px-4 py-3 rounded-pill">
+                                Ver productos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shop by Category Section -->
+        <section class="category-section py-5 mb-5">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="h3 fw-bold text-dark">Compra por categoría</h2>
+                    <a th:href="@{/consultas/listado}" class="text-primary text-decoration-none fw-semibold">
+                        Ver todas
+                    </a>
+                </div>
+                <div class="row g-4">
+                    <div th:each="categoria, iterStat : ${categorias}" 
+                         th:if="${iterStat.index < 3}" 
+                         class="col-md-4">
+                        <div class="category-card card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center p-4">
+                                <div class="category-icon mb-3">
+                                    <i th:if="${categoria.descripcion == 'Medicamentos'}" 
+                                       class="fas fa-pills fa-3x text-success"></i>
+                                    <i th:if="${categoria.descripcion == 'Cuidado Personal'}" 
+                                       class="fas fa-pump-soap fa-3x text-success"></i>
+                                    <i th:if="${categoria.descripcion == 'Salud y Bienestar'}" 
+                                       class="fas fa-heartbeat fa-3x text-success"></i>
+                                    <i th:unless="${categoria.descripcion == 'Medicamentos' or categoria.descripcion == 'Cuidado Personal' or categoria.descripcion == 'Salud y Bienestar'}" 
+                                       class="fas fa-capsules fa-3x text-success"></i>
+                                </div>
+                                <h5 class="card-title fw-semibold" th:text="${categoria.descripcion}">Categoría</h5>
+                                <a th:href="@{/consultas/{id}(id=${categoria.idCategoria})}" 
+                                   class="btn btn-outline-success btn-sm mt-2">
+                                    Ver productos
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Popular Products Section -->
+        <section class="products-section py-5 mb-5">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="h3 fw-bold text-dark">Productos populares</h2>
+                    <a th:href="@{/consultas/listado}" class="text-primary text-decoration-none fw-semibold">
+                        Ver todos
+                    </a>
+                </div>
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+                    <div th:each="producto, iterStat : ${productos}" 
+                         th:if="${iterStat.index < 4}" 
+                         class="col">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="d-flex justify-content-center align-items-center bg-light p-3"
+                                 style="height: 200px;">
+                                <img th:src="${producto.rutaImagen}" 
+                                     class="img-fluid"
+                                     style="max-height: 100%; object-fit: contain;" 
+                                     th:alt="${producto.descripcion}"/>
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title text-truncate mb-2" th:text="${producto.descripcion}">Producto</h5>
+                                <p class="card-text text-muted small mb-auto text-truncate" 
+                                   th:text="${producto.detalle}">Descripción</p>
+                                <div class="mt-3 d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="h5 text-success fw-bold mb-0" 
+                                              th:text="${#numbers.formatCurrency(producto.precio)}">₡0.00</span>
+                                        <span th:if="${producto.existencias > 0}" 
+                                              class="badge bg-success ms-2" 
+                                              th:text="${producto.existencias} + ' unidades'">unidades</span>
+                                        <span th:unless="${producto.existencias > 0}" 
+                                              class="badge bg-danger ms-2">Agotado</span>
+                                    </div>
+                                    <form th:action="@{/carrito/agregar}" method="post" class="d-inline">
+                                        <input type="hidden" th:value="${producto.idProducto}" name="idProducto">
+                                        <button type="button" 
+                                                class="btn btn-primary btn-sm"
+                                                th:disabled="${producto.existencias == 0}"
+                                                onclick="addCart(this.form)">
+                                            <i class="fas fa-cart-plus"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Category Tabs Section (for filtering) -->
         <section th:replace="~{consultas/fragmentos :: tabs}"/>
-        <section th:replace="~{consultas/fragmentos :: tarjetas}"/>
         
+        <!-- All Products Grid -->
+        <section th:replace="~{consultas/fragmentos :: tarjetas}"/>
+
         <footer th:replace="~{general/fragmentos :: footer}"/>
+        <section th:replace="~{general/fragmentos :: mostrarToast}"/>
     </body>
 </html>

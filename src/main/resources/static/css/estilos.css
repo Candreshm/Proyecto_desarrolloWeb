@@ -8,13 +8,13 @@
     align-items: center;
 }
 
-.hero-content {
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.hero-title {
+    color: #2e7d32;
 }
 
-.hero-content h1 {
-    color: #2e7d32;
+.hero-subtitle {
+    color: #66bb6a;
+    font-weight: 400;
 }
 
 /* Category Cards */
